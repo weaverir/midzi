@@ -10,50 +10,31 @@ const SearchResults = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const handleRouteChange = (url) => {
-            const urlParams = new URLSearchParams(new URL(url).search);
-            const urlQuery = urlParams.get('name');
-            const timestamp = urlParams.get('timestamp'); // Use timestamp to force re-render
-
-            if (urlQuery) {
-                setQuery(`${urlQuery}_${timestamp}`); // Use combined query and timestamp as unique key
-            }
-        };
-
-        // Initial extraction of query parameters
-        handleRouteChange(window.location.href);
-
-        // Listen for route changes
-        router.events.on('routeChangeComplete', handleRouteChange);
-
-        // Clean up the event listener
-        return () => {
-            router.events.off('routeChangeComplete', handleRouteChange);
-        };
-    }, [router]);
+        // Extract query parameter from the URL
+        const urlQuery = new URLSearchParams(window.location.search).get('name');
+        setQuery(urlQuery);
+    }, [ [ {} , {} ]] );
 
     useEffect(() => {
-        const fetchResults = async () => {
-            const [urlQuery] = query.split('_'); // Extract the actual query from the combined string
-            if (urlQuery) {
+        if (query) {
+            const fetchResults = async () => {
                 setLoading(true);
                 try {
-                    const response = await axios.get('https://midzi.liara.run/search', {
-                        params: { q: urlQuery }
+                    const response = await axios.get('https://midzi.liara.run/search/', {
+                        params: { search: query }
                     });
-                    console.log('API Response:', response.data); // Debug: Log the API response
+                    console.log(response.data); // Debug: Log the API response
                     setResults(response.data.results.products || []); // Adjust based on API response
                     setLoading(false);
                 } catch (error) {
                     console.error('Error fetching data:', error);
-                    setResults([]);
                     setLoading(false);
                 }
-            }
-        };
+            };
 
-        fetchResults();
-    }, [query]);
+            fetchResults();
+        }
+    }, [query]); // Fetch results whenever the query changes
 
     return (
         <div className="bg-navblue rounded-2xl flex justify-center mx-2 p-6">
@@ -71,9 +52,7 @@ const SearchResults = () => {
                             </div>
                         ))
                     ) : (
-                        query && (
-                            <div>موردی برای "{query.split('_')[0]}" یافت نشد</div>
-                        )
+                        <div> موردی برای "{query}" یافت نشد </div>
                     )
                 )}
             </div>

@@ -1,0 +1,48 @@
+// components/SearchComponent.js
+import { useState } from 'react';
+import axios from 'axios';
+
+const SearchComponent = () => {
+    const [query, setQuery] = useState('');
+    const [results, setResults] = useState([]);
+
+    const handleInputChange = async (event) => {
+        const query = event.target.value;
+        setQuery(query);
+
+        if (query.length > 0) {
+            try {
+                const response = await axios.get(`https://midzi.liara.run/search`, {
+                    params: { q: query }
+                });
+                setResults(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        } else {
+            setResults([]);
+        }
+    };
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={query}
+                onChange={handleInputChange}
+                placeholder="Type to search..."
+            />
+            <div>
+                {results.length > 0 ? (
+                    results.map((item, index) => (
+                        <div key={index}>{item.name}</div> // Adjust the property name based on the API response
+                    ))
+                ) : (
+                    <div>No results found</div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default SearchComponent;

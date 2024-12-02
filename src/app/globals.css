@@ -1,6 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: awsome;
+  font-weight: bold;
+  src: url(./../fonts/awsome.otf);
+}
 
 :root {
   --background: #ffffff;
@@ -19,3 +24,7 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+.scrollbar-hide { -ms-overflow-style: none; /* IE and Edge */ scrollbar-width: none; /* Firefox */ }
+.scrollbar-hide::-webkit-scrollbar { display: none; /* Safari and Chrome */ } /* Ensure the scrollbar shows up on hover */
+.scroll-on-hover:hover { overflow-y: scroll; }
+
