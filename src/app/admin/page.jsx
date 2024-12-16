@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import UserLayout from "@/app/user/layout";
 import RightSidebar from "@/components/user/rightsidecomponent";
 
-const User = () => {
+const Admin = () => {
     const [info, setInfo] = useState({});
     const [editInfo, setEditInfo] = useState({
         first_name: '',
@@ -28,10 +28,11 @@ const User = () => {
             const userInfo = async () => {
                 try {
                     const response = await axiosInstance.get("/accounts/dashboard/");
-                    if (response.data.is_admin) {
-                        router.push('/admin');
+                    if (response.data.is_admin === false) {
+                        router.push('/user');
                     } else {
                         setInfo(response.data);
+
                         setEditInfo({
                             first_name: response.data.first_name,
                             last_name: response.data.last_name,
@@ -144,4 +145,4 @@ const User = () => {
     );
 };
 
-export default User;
+export default Admin;

@@ -6,6 +6,27 @@
   font-weight: bold;
   src: url(./../fonts/awsome.otf);
 }
+@font-face {
+  font-family: awsome_b;
+  font-weight: bold;
+  src: url(./../fonts/awsome_b.otf);
+}
+
+@font-face {
+  font-family: "Iranian Sans";
+  font-weight: bold;
+  src: url(./../fonts/IRANSansWeb.woff2) ;
+}
+@font-face {
+  font-family: "Iranian Sans_medium";
+  font-weight: bold;
+  src: url(./../fonts/IRANSansWeb_Medium.woff2) ;
+}
+@font-face {
+  font-family: "Iranian Sans_bold";
+  font-weight: bold;
+  src: url(./../fonts/IRANSansWeb_Bold.woff2) ;
+}
 
 :root {
   --background: #ffffff;
@@ -27,4 +48,14 @@ body {
 .scrollbar-hide { -ms-overflow-style: none; /* IE and Edge */ scrollbar-width: none; /* Firefox */ }
 .scrollbar-hide::-webkit-scrollbar { display: none; /* Safari and Chrome */ } /* Ensure the scrollbar shows up on hover */
 .scroll-on-hover:hover { overflow-y: scroll; }
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 

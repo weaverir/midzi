@@ -2,6 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -10,9 +11,8 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 // Import required modules
 import { Pagination } from 'swiper/modules';
-import {useRouter} from "next/navigation";
 
-export default function S_product2() {
+export default function S_product1() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const containerRef = useRef(null);
@@ -29,7 +29,7 @@ export default function S_product2() {
         setLoading(true);  // Show loading screen
         try {
             const response = await axiosInstance.get('https://midzi.liara.run/');
-            setProducts(response.data.off);
+            setProducts(response.data.new_products);
             toast.success('Products fetched successfully!');
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -72,8 +72,9 @@ export default function S_product2() {
     return (
         <div className="my-5 mx-4 font-sans">
             <div className="flex flex-row my-5">
-                <div className='text-3xl w-[10%] ml-5 flex justify-center p-2 items-center'> تخفیف ها </div>
-                <div className="w-[90%] h-[30px] bg-cover bg-center overflow-hidden" style={{ backgroundImage: 'url(/pattern2.png)' }}></div>
+                <div className='text-3xl w-[15%] ml-5 flex justify-center p-2 items-center'> جدیدترین ها</div>
+                <div className="w-[85%] h-[30px] bg-cover bg-center overflow-hidden"
+                     style={{backgroundImage: 'url(/pattern2.png)'}}></div>
             </div>
             <div
                 ref={containerRef}
