@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
@@ -45,7 +46,6 @@ const BotNav = () => {
     };
 
     const categoryList = buildCategoryList(categories);
-
     const handleCategoryClick = (category) => {
         const categoryElement = document.getElementById(`category-${category.id}`);
         const rect = categoryElement.getBoundingClientRect();
@@ -81,34 +81,39 @@ const BotNav = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showSubcategories]);
-
     return (
         <div className="relative font-sans_b w-[70%] mx-auto hidden lg:block">
-            <div
-                className="flex-row mx-auto items-center justify-between content-center max-w-[1200px] bg-navblue h-12 w-[80%] border-t dark:border-t-bgdark rounded-br-2xl rounded-bl-2xl dark:text-text_w dark:bg-navblueD">
+            <div className="flex-row mx-auto items-center justify-between content-center max-w-[1200px] bg-navblue h-12 w-[80%] border-t dark:border-t-bgdark rounded-br-2xl rounded-bl-2xl dark:text-text_w dark:bg-navblueD">
                 <ul className="flex flex-row items-center justify-start content-center gap-3 mx-3 font-sans_m dark:text-text_w">
-                    <li onClick={() => setShowSubcategories(true)} className="cursor-pointer">محصولات</li>
+                    <li onClick={() => setShowSubcategories(true)} className="cursor-pointer">دسته بندی</li>
                 </ul>
             </div>
 
             {showSubcategories && (
-                <div
-                    ref={popupRef}
-                    className="absolute top-16 left-1/2 transform bg-navblue -translate-x-1/2 w-full max-w-xl  dark:bg-navblueD p-4 rounded-lg shadow-lg z-50">
+                <div ref={popupRef} className="absolute top-16 left-1/2 transform bg-navblue -translate-x-1/2 w-full max-w-xl  dark:bg-navblueD p-4 rounded-lg shadow-lg z-50">
                     <button className="absolute top-2 right-2 text-black dark:text-text_w" onClick={closePopup}>✖</button>
                     <h2 className="text-lg font-bold mb-4 dark:text-text_w">محصولات</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <ul className="col-span-1">
+                        <ul className="col-span-1 flex gap-3 flex-col w-[50%]">
                             {categoryList.map((category) => (
-                                <li key={category.id} id={`category-${category.id}`} onClick={() => handleCategoryClick(category)} className="cursor-pointer">
-                                    {category.title}
+                                <li
+                                    key={category.id}
+                                    id={`category-${category.id}`}
+                                    onClick={() => handleCategoryClick(category)}
+                                    className="cursor-pointer bg-white dark:bg-bgdark rounded"
+                                >
+                                    {category.title} {category.subcategories.length > 0 && '◀'}
                                 </li>
                             ))}
                         </ul>
                         {selectedCategory && selectedCategory.subcategories.length > 0 && (
-                            <ul className="col-span-1">
+                            <ul className="col-span-1 flex flex-col gap-3 border-r-2">
                                 {selectedCategory.subcategories.map((subcategory) => (
-                                    <li key={subcategory.id} onClick={() => router.push(`/search?category=${subcategory.title}`)} className="cursor-pointer">
+                                    <li
+                                        key={subcategory.id}
+                                        onClick={() => router.push(`/search?category=${subcategory.title}`)}
+                                        className="cursor-pointer bg-white dark:bg-bgdark rounded"
+                                    >
                                         {subcategory.title}
                                     </li>
                                 ))}

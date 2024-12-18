@@ -2,15 +2,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 import { toast } from 'react-hot-toast';
+import { BounceLoader } from 'react-spinners';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
-// Import required modules
-import { Pagination } from 'swiper/modules';
 
 export default function S_product1() {
     const [products, setProducts] = useState([]);
@@ -30,10 +23,8 @@ export default function S_product1() {
         try {
             const response = await axiosInstance.get('https://midzi.liara.run/');
             setProducts(response.data.new_products);
-            toast.success('Products fetched successfully!');
         } catch (error) {
-            console.error('Error fetching products:', error);
-            toast.error('Error fetching products.');
+            toast.error('خطا در دریافت مخصول');
         } finally {
             setLoading(false);  // Hide loading screen
         }
@@ -66,63 +57,88 @@ export default function S_product1() {
     const handleProductClick = (product) => {
         // Handle product click event
         router.push(`/${product.slug}`);
-        console.log(product.slug);
+    };
+
+    const scrollLeftClick = () => {
+        if (containerRef.current) {
+            containerRef.current.scrollLeft -= 200; // Adjust the scroll distance as needed
+        }
+    };
+
+    const scrollRightClick = () => {
+        if (containerRef.current) {
+            containerRef.current.scrollLeft += 200; // Adjust the scroll distance as needed
+        }
     };
 
     return (
         <div className="my-5 mx-4 font-sans">
-            <div className="flex flex-row my-5">
-                <div className='text-3xl w-[15%] ml-5 flex justify-center p-2 items-center'> جدیدترین ها</div>
-                <div className="w-[85%] h-[30px] bg-cover bg-center overflow-hidden"
-                     style={{backgroundImage: 'url(/pattern2.png)'}}></div>
+            <div className="flex flex-row my-5 justify-center items-center">
+                <div
+                    className='text-xl lg:text-3xl w-[60%] md:w-[35%] lg:w-[30%] xl:w-[25%] font-sans_b ml-5 flex justify-start  p-2 items-center'> جدیدترین
+                    ها
+                </div>
+                <div
+                    className="w-[100%]  bg-cover border-t-4 dark:border-navblue border-stone-500 bg-center overflow-hidden"
+                ></div>
             </div>
-            <div
-                ref={containerRef}
-                onMouseDown={handleMouseDown}
-                onMouseLeave={handleMouseLeave}
-                onMouseUp={handleMouseUp}
-                onMouseMove={handleMouseMove}
-                className='flex select-none w-[100%] flex-row gap-4 scroll-auto overflow-x-auto'
-            >
-                {loading ? (
-                    <div className="flex justify-center items-center h-64 w-full">
-                        <p className="text-white">در حال بارگذاری...</p>
-                    </div>
-                ) : (
-                    products.length > 0 ? (
-                        products.map(item => (
-                            <div
-                                key={item.id}
-                                className="h-[350px] font-sans min-w-56 max-w-56 bg-myblue rounded-xl flex flex-col justify-between cursor-pointer bg-cover bg-center"
-                                onClick={() => handleProductClick(item)}
-                                style={{backgroundImage: `url(http://midzi.liara.run${item.thumbnail})`}}
-                            >
-                                <div className="flex flex-col justify-start bg-gray-900 bg-opacity-50 rounded-t-xl">
-                                    <div
-                                        className="h-[40px] w-[40px] font-awsome bg-navblue dark:bg-bgdark dark:text-white text-text_b flex items-center justify-center mt-4 rounded-xl mr-4">
-                                    </div>
-                                </div>
-                                <div
-                                    className="w-[200px] font-sans text-sm dark:text-text_w text-black dark:bg-bgdark flex-row h-[55px] bg-navblue mx-auto mb-4 rounded-xl flex items-center justify-between p-2 gap-3">
-                                    <div className="flex flex-col justify-center items-center">
-                                        <div className="font-sans_b">{item.name}</div>
-                                        <div>{item.category_name}</div>
-                                    </div>
-                                    {item.discounted_price && item.discounted_price < item.price ? (
-                                        <div className={"text-sm flex flex-col"}>
-                                            <span className="text-red-600 font-bold">{item.discounted_price?.toLocaleString()} تومان</span>
-                                            <span className="line-through text-black dark:text-text_w ml-2">{item.price?.toLocaleString()} تومان</span>
-                                        </div>
-                                    ) : (
-                                        <div className="text-sm">{item.price?.toLocaleString()} تومان</div>
-                                    )}
-                                </div>
-                            </div>
-                        ))
+            <div className="flex flex-row mb-4 justify-between items-center">
+                <button onClick={scrollLeftClick}
+                        className="p-2 bg-navblue rounded-full w-[40px] text-black dark:bg-navblueD dark:text-text_w ">▶
+                </button>
+                <div
+                    ref={containerRef}
+                    onMouseDown={handleMouseDown}
+                    onMouseLeave={handleMouseLeave}
+                    onMouseUp={handleMouseUp}
+                    onMouseMove={handleMouseMove}
+                    className='flex select-none w-[100%] flex-row gap-4 no-scrollbar scroll-auto overflow-x-auto'
+                >
+                    {loading ? (
+                        <div className="flex justify-center items-center h-64 w-full">
+                            <BounceLoader color="#505DB1"/>
+                        </div>
                     ) : (
-                        <p className="text-white">هیچ محصولی یافت نشد.</p>
-                    )
-                )}
+                        products.length > 0 ? (
+                            products.map(item => (
+                                <div
+                                    key={item.id}
+                                    className="h-[350px] font-sans_b min-w-56 max-w-56 bg-myblue rounded-xl flex flex-col justify-between cursor-pointer bg-cover bg-center"
+                                    onClick={() => handleProductClick(item)}
+                                    style={{backgroundImage: `url(https://midzi.liara.run${item.thumbnail})`}}
+                                >
+                                    <div className="flex flex-col justify-start bg-gray-900 bg-opacity-50 rounded-t-xl">
+                                        <div
+                                            className="h-[40px] w-[40px] font-awsome bg-navblue dark:bg-bgdark dark:text-white text-text_b flex items-center justify-center mt-4 rounded-xl mr-4">
+                                        </div>
+                                    </div>
+                                    <div
+                                        className="w-[200px] font-sans text-sm dark:text-text_w text-black dark:bg-bgdark flex-row h-[55px] bg-navblue mx-auto mb-4 rounded-xl flex items-center justify-between p-2 gap-3">
+                                        <div className="flex flex-col justify-center items-center">
+                                            <div className="font-sans_b">{item.name}</div>
+                                            <div>{item.category_name}</div>
+                                        </div>
+                                        {item.discounted_price && item.discounted_price < item.price ? (
+                                            <div className={"text-sm flex flex-col"}>
+                                                <span
+                                                    className="text-red-600 font-bold">{item.discounted_price?.toLocaleString()} تومان</span>
+                                                <span
+                                                    className="line-through text-black dark:text-text_w ml-2">{item.price?.toLocaleString()} تومان</span>
+                                            </div>
+                                        ) : (
+                                            <div className="text-sm">{item.price?.toLocaleString()} تومان</div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-white">هیچ محصولی یافت نشد.</p>
+                        )
+                    )}
+                </div>
+                <button onClick={scrollRightClick}
+                        className="p-2 bg-navblue rounded-full w-[40px] text-black dark:bg-navblueD dark:text-text_w ">◀
+                </button>
             </div>
         </div>
     );

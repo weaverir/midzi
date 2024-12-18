@@ -20,7 +20,7 @@ function Layout({ children, currentPath }) {
 
     return (
         <html lang="en" dir="rtl" className={darkMode ? 'dark' : ''}>
-        <body className={`bg-white dark:bg-bgdark dark:text-text_w text-black flex flex-col mx-auto`}>
+        <body className={`bg-stone-50 dark:bg-bgdark dark:text-text_w text-black flex flex-col mx-auto`}>
         <Toaster />
         <Navbar />
         {path.startsWith('/admin' ) || path.startsWith('/user') || path.startsWith('/login') || path.startsWith('/signup') ?  null  :<SliderCircle /> }

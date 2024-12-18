@@ -14,6 +14,7 @@ const CartModal = () => {
 
     const closeModal = () => {
         // Custom logic to close modal, e.g., updating a state variable or class
+        setIsLoggedIn(false);
     };
 
     useEffect(() => {
@@ -60,7 +61,6 @@ const CartModal = () => {
             setIsLoggedIn(false);
         }
     };
-
     const fetchCart = async () => {
         try {
             const response = await axiosInstance.get('/accounts/basket/');
@@ -87,6 +87,7 @@ const CartModal = () => {
             toast.error('بروزرسانی سبد خرید ناموفق بود.');
         }
     };
+
     const removeFromCart = async (item) => {
         await updateItemQuantity(item, 0);
     };
@@ -97,17 +98,16 @@ const CartModal = () => {
             return total + price * item.quantity;
         }, 0);
     };
-
     const CartItem = cart.length > 0;
 
     return (
-        <div ref={modalRef} className="cart-modal w-max absolute p-4 top-12 z-50 left-0 bg-navblue font-sans_b dark:bg-navblueD dark:text-text_w rounded-xl text-text_b flex flex-col gap-6 shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-h-[500px]">
+        <div ref={modalRef} className="cart-modal w-max absolute font-sans_b p-2 top-12 z-50 left-0 bg-navblue  dark:bg-navblueD dark:text-text_w rounded-xl text-text_b flex flex-col gap-6 shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-w-[350px] md:w-max md:max-h-[500px]">
             {!CartItem ? (
                 <div className="flex justify-center dark:bg-navblueD dark:text-text_w items-center">سبد خرید خالی است</div>
             ) : (
                 <>
                     <h2 className="text-xl">سبد خرید</h2>
-                    <div className="flex flex-col gap-4 overflow-y-auto max-h-60">
+                    <div className="flex flex-col  w-[100%] gap-4 overflow-y-auto max-h-60">
                         {cart.map((item, index) => (
                             <div key={index} className="flex gap-4 dark:bg-bgdark dark:text-text_w bg-white rounded-xl p-4">
                                 <div
@@ -122,9 +122,9 @@ const CartModal = () => {
                                                 {item.product_variant?.discount_percentage ? (
                                                     <div className={"flex flex-col"}>
                                                         <span
-                                                            className="ml-2 text-red-600">{item.product_variant?.discounted_price.toLocaleString()} تومان</span>
+                                                            className="ml-2 text-red-600 tex-sm">{item.product_variant?.discounted_price.toLocaleString()} تومان</span>
                                                         <span
-                                                            className="line-through">{item.product_variant?.price.toLocaleString()} تومان</span>
+                                                            className="line-through text-sm">{item.product_variant?.price.toLocaleString()} تومان</span>
 
                                                     </div>
                                                 ) : (
@@ -149,7 +149,7 @@ const CartModal = () => {
                             <span className="bg-myblue dark:bg-bgdark dark:text-text_w p-1 rounded-lg text-text_w">{calculateTotalPrice(cart).toLocaleString()} تومان</span>
                         </div>
                         <div className="flex justify-between text-sm mt-4">
-                            <button className="bg-myblue rounded-lg p-1 text-text_w" onClick={() => router.push('/user/cart')}>مشاهده سبد</button>
+
                             <button className="bg-myblue rounded-lg p-1 text-text_w" onClick={() => router.push('/user/cart')}>تکمیل سفارش</button>
                         </div>
                     </div>

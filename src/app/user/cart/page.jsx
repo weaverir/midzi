@@ -23,7 +23,6 @@ const Page = () => {
             const response = await axiosInstance.get(`https://midzi.liara.run/accounts/basket/${basketId}/items/`);
             if (response.status === 200) {
                 setBasketItems(response.data.basket.items);
-
             }
         } catch (error) {
             console.error('Error fetching basket items:', error);
@@ -89,6 +88,7 @@ const Page = () => {
             toast.error('خطا در ثبت سفارش.');
         }
     };
+
     return (
         <div className="p-4 bg-navblue w-full rounded-2xl font-sans_b dark:bg-navblueD dark:text-text_w">
             <div className="bg-navblue dark:bg-navblueD rounded-lg p-4">
@@ -98,8 +98,8 @@ const Page = () => {
                 {basketItems.length > 0 ? (
                     <ul className="space-y-4 dark:bg-bgdark dark:text-text_w rounded-xl flex flex-col gap-3">
                         {basketItems.map(item => (
-                            <li key={item.id} className="flex items-center text-black justify-between gap-4 bg-white text-black dark:text-text_w dark:bg-bgdark p-4 rounded-lg shadow-md">
-                                <div className="flex items-center gap-4">
+                            <li key={item.id} className="flex flex-col md:flex-row items-center text-black justify-between gap-4 bg-white dark:text-text_w dark:bg-bgdark p-4 rounded-lg shadow-md">
+                                <div className="flex flex-col md:flex-row items-center gap-4">
                                     <img
                                         src={`https://midzi.liara.run${item.thumbnail}`}
                                         alt={item.product.name}
@@ -114,7 +114,7 @@ const Page = () => {
                                 <div className="text-center">
                                     {item.product_variant.discount_percentage > 0 ? (
                                         <>
-                                            <p className="line-through  text-sm md:text-base">
+                                            <p className="line-through text-sm md:text-base">
                                                 {item.product_variant.price} تومان
                                             </p>
                                             <p className="text-red-500 text-sm md:text-base font-bold">
@@ -122,7 +122,7 @@ const Page = () => {
                                             </p>
                                         </>
                                     ) : (
-                                        <p className=" font-bold text-sm md:text-base">
+                                        <p className="font-bold text-sm md:text-base">
                                             {item.product_variant.price} تومان
                                         </p>
                                     )}
@@ -130,7 +130,7 @@ const Page = () => {
                                 <div className="flex items-center text-black dark:text-text_w gap-2">
                                     <button
                                         onClick={() => updateItemQuantity(item, item.quantity - 1)}
-                                        className="bg-red-500  px-2 py-1 rounded-full hover:bg-red-600"
+                                        className="bg-red-500 px-2 py-1 rounded-full hover:bg-red-600"
                                     >
                                         -
                                     </button>

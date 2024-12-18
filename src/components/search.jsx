@@ -5,6 +5,8 @@ import axios from 'axios';
 import { BounceLoader } from 'react-spinners';
 import { toast } from 'react-hot-toast';
 import Image from "next/image";
+import { useDarkMode } from "@/context/DarkModeContext";
+
 
 const Search = () => {
     const router = useRouter();
@@ -16,6 +18,7 @@ const Search = () => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const searchRef = useRef();
     const dropdownRef = useRef();
+    const { darkMode, toggleDarkMode } = useDarkMode();
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -93,7 +96,7 @@ const Search = () => {
 
     return (
         <div className="flex-row font-sans_b gap-8  relative">
-            <form onSubmit={handleSearch} className="flex hidden lg:flex flex-row rounded" ref={searchRef}>
+            <form onSubmit={handleSearch} className=" hidden lg:flex flex-row rounded" ref={searchRef}>
                 <input
                     type="text"
                     value={query}
@@ -107,13 +110,24 @@ const Search = () => {
                     
                 </button>
             </form>
-            <Image src="/logo.png" alt='logo' height={50} width={100} className="flex lg:hidden" />
+            <div
+                className=" flex cursor-pointer lg:hidden"
+                onClick={() => router.push(`/`)}
+                style={{
+                    backgroundImage: darkMode ? "url('/logod.png')" : "url('/logo.png')",
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    height: '50px',
+                    width: '100px'
+                }}
+            />
             {loading && query ? (
                 <div
                     ref={dropdownRef}
                     className="w-[350px] dark:bg-navblueD dark:text-text_w absolute top-12 h-[500px] -right-10 z-50 bg-navblue rounded-xl shadow-2xl p-2 flex justify-center items-center"
                 >
-                    <BounceLoader color="#505DB1" />
+                    <BounceLoader color="#505DB1"/>
                 </div>
             ) : dropdownVisible && results.length > 0 && query ? (
                 <div
@@ -129,7 +143,7 @@ const Search = () => {
                         >
                             <div
                                 className="h-24 w-24 bg-cover bg-center rounded-xl rounded"
-                                style={{ backgroundImage: `url(${item.thumbnail})` }}
+                                style={{backgroundImage: `url(${item.thumbnail})`}}
                             ></div>
                             <div className="flex flex-col justify-between w-full">
                                 <div>
@@ -137,8 +151,10 @@ const Search = () => {
                                         <h3 className="font-semibold">{item.name}</h3>
                                         {item.discounted_price && item.discounted_price < item.price ? (
                                             <div className={"flex flex-col bg-myblue rounded-xl p-2 "}>
-                                                <span className="text-red-600 text-sm font-bold">{item.discounted_price?.toLocaleString()} تومان</span>
-                                                <span className="line-through  text-sm text-gray-400 ml-2">{item.price?.toLocaleString()} تومان</span>
+                                                <span
+                                                    className="text-red-600 text-sm font-bold">{item.discounted_price?.toLocaleString()} تومان</span>
+                                                <span
+                                                    className="line-through  text-sm text-gray-400 ml-2">{item.price?.toLocaleString()} تومان</span>
                                             </div>
                                         ) : (
                                             <div className="p-1 bg-myblue text-text_w rounded-xl">
@@ -155,7 +171,8 @@ const Search = () => {
                     ))}
                 </div>
             ) : dropdownVisible && results.length === 0 && query ? (
-                <div className="w-[250px] dark:bg-navblueD dark:text-text_w absolute top-12 right-0 z-50 bg-navblue rounded-xl shadow-2xl p-2">
+                <div
+                    className="w-[250px] dark:bg-navblueD dark:text-text_w absolute top-12 right-0 z-50 bg-navblue rounded-xl shadow-2xl p-2">
                     No results found
                 </div>
             ) : null}

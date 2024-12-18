@@ -240,11 +240,11 @@ function SinglePage() {
                         <div className="bg-white dark:bg-bgdark dark:text-text_w rounded-xl shadow-lg p-4 mb-4">
                             <p className="text-black dark:text-text_w font-semibold text-2xl mb-2">تعداد</p>
                             <div className="flex justify-center items-center gap-3">
-                                <button className="px-2 py-1 border rounded-lg shadow-lg" onClick={() => handleQuantityChange("decrement")}>
+                                <button className="px-2 py-1 border rounded-lg shadow-lg bg-red-500" onClick={() => handleQuantityChange("decrement")}>
                                     -
                                 </button>
                                 <span className="text-xl">{quantity}</span>
-                                <button className="px-2 py-1 border rounded-lg shadow-lg" onClick={() => handleQuantityChange("increment")}>
+                                <button className="px-2 py-1 border rounded-lg shadow-lg bg-green-500" onClick={() => handleQuantityChange("increment")}>
                                     +
                                 </button>
                             </div>

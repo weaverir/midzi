@@ -1,11 +1,11 @@
+"use client";
 import React, { useState, useEffect, useRef } from 'react';
-import Link from "next/link";
 import axios from 'axios';
 import { useRouter } from "next/navigation";
 import { useDarkMode } from "@/context/DarkModeContext";
 import { BounceLoader } from 'react-spinners';
 import { toast } from 'react-hot-toast';
-import {log} from "next/dist/server/typescript/utils";
+import Category from "@/components/category";
 
 const Menu = () => {
     const [open, setOpen] = useState(false);
@@ -75,6 +75,15 @@ const Menu = () => {
         }
     };
 
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            if (queryRef.current) {
+                fetchResults();
+            }
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [query]);
     const handleInputChange = (event) => {
         const query = event.target.value;
         setQuery(query);
@@ -86,6 +95,7 @@ const Menu = () => {
         const formattedName = productName.replace(/\s+/g, '-');
         router.push(`/${formattedName}/`);
         setDropdownVisible(false);
+        setSearchIsOpen(false);
     };
 
     const handleClickOutside = (event) => {
@@ -106,11 +116,13 @@ const Menu = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [searchIsOpen, open]);
+
     useEffect(() => {
         const handleRouteChange = () => {
             setOpen(false);
             setSearchIsOpen(false);
             setShowProducts(false);
+            setExpandedCategory(null); // Close expanded category on route change
         };
 
         router.events?.on('routeChangeStart', handleRouteChange);
@@ -125,56 +137,8 @@ const Menu = () => {
 
     return (
         <>
-            <div className="font-awsome cursor-pointer lg:hidden text-xl" onClick={() => setOpen((prev) => !prev)}>
-                {open ? `` : ``}
+            <Category/>
 
-            </div>
-            <div ref={menuRef}>
-                {open && (
-                    <div
-                        className="absolute md:hidden font-sans_b z-50 dark:bg-navblueD dark:text-text_w left-0 top-16 h-[calc(100vh-100px)] bg-navblue w-full mt-4 flex flex-col items-center justify-center gap-8">
-                        <div onClick={() => {
-                            router.push(`/`)
-                            setOpen(false)
-                        }}>خانه</div>
-                        <div>
-                            <div onClick={() => setShowProducts((prev) => !prev)}>
-                                محصولات
-                            </div>
-                            {showProducts && (
-                                <div className="mt-2 bg-white dark:bg-navblueD p-4 rounded-lg shadow-lg z-50">
-                                    <ul className="flex flex-col gap-2">
-                                        {categories.map((category) => (
-                                            <li key={category.id} className="cursor-pointer"
-                                                onClick={() => {router.push(`/search?category=${category.title}`)
-                                                setShowProducts(false)} }>
-                                                {category.title}
-                                                {expandedCategory === category && (
-                                                    <ul className="ml-4 mt-2">
-                                                        {category.subcategories?.map((subcategory) => (
-                                                            <li key={subcategory.id} className="cursor-pointer"
-                                                                onClick={() => {
-                                                                    router.push(`/search?category=${subcategory.title}`)
-                                                                    setShowProducts(false)
-                                                                }}>
-                                                                {subcategory.title}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                )}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                        <div onClick={() => {
-                            router.push(`/login`)
-                            setOpen(false)
-                        }}>ورود</div>
-                    </div>
-                )}
-            </div>
             <div id="dark"
                  className="rounded-full w-10 h-10 select-none font-awsome bg-myblue justify-center items-center text-text_w shadow-lg cursor-pointer mx-1 flex lg:hidden"
                  onClick={toggleDarkMode}>
@@ -185,20 +149,26 @@ const Menu = () => {
                 onClick={() => setSearchIsOpen((prev) => !prev)}>
                 
             </div>
-
             {searchIsOpen && (
                 <div ref={searchPopupRef}
                      className="absolute z-50 left-0 dark:bg-navblueD dark:text-text_w top-16 h-[calc(100vh-100px)] bg-navblue w-full mt-4 text-text_b flex flex-col items-center justify-start gap-8">
-                    <div className="flex-row gap-8 mt-4 flex z-50">
+
+                    <div className="flex-row gap-2 mt-4 flex z-50">
+                        <button
+                            className="font-awsome text-xl text-text_w bg-red-500 rounded-full w-[40px] h-[40px] flex items-center justify-center"
+                            onClick={() => setSearchIsOpen(false)}>
+                            
+                        </button>
                         <form onSubmit={handleSearch} className='flex flex-row rounded'>
                             <input type="text" name="name" value={query} placeholder='دنبال چی میگردی ؟'
-                                   className='flex font-sans_b w-3/4 dark:bg-bgdark flex-1 dark:text-text_w shadow rounded-full bg-white mx-4 placeholder:flex placeholder:justify-center placeholder:items-center'
+                                   className='flex font-sans_b  dark:bg-bgdark flex-1 dark:text-text_w shadow rounded-full bg-white mx-4 placeholder:flex placeholder:justify-center placeholder:items-center'
                                    onChange={handleInputChange} autoComplete="off"/>
                             <button type="submit"
                                     className='font-awsome bg-myblue text-text_w rounded-full w-[40px] h-[40px]'>
                             </button>
                         </form>
                     </div>
+
                     {loading && query ? (
                         <div
                             className="w-[350px] dark:bg-navblueD dark:text-text_w absolute top-28 h-[500px] z-50 bg-navblue rounded-xl shadow-2xl p-2 flex justify-center items-center">

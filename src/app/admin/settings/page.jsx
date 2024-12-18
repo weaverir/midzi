@@ -53,9 +53,9 @@ const Page = () => {
         }
     };
 
-    const deleteCategory = async (categoryName) => {
+    const deleteCategory = async (categoryId) => {
         try {
-            await axiosInstance.delete(`padmin/category/${categoryName}/`);
+            await axiosInstance.delete(`padmin/category/${categoryId}/`);
             fetchCategories();
             toast.success('دسته‌بندی با موفقیت حذف شد');
         } catch (error) {
@@ -79,7 +79,7 @@ const Page = () => {
                     </div>
                     <button
                         className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md shadow hover:bg-red-700"
-                        onClick={() => deleteCategory(category.title)}
+                        onClick={() => deleteCategory(category.id)}
                     >
                         حذف
                     </button>

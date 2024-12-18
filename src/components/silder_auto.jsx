@@ -13,7 +13,7 @@ import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 const Auto = () => {
     return (
-        <div className="w-full mx-4 mb-4 rounded-2xl">
+        <div className="w-[100%]  mb-4 rounded-2xl">
             <Swiper
                 spaceBetween={30}
                 centeredSlides={true}

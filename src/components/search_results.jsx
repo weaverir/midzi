@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { BounceLoader } from "react-spinners";
 import { toast } from 'react-hot-toast';
@@ -77,7 +77,7 @@ const SearchResults = () => {
     };
 
     return (
-        <div className="bg-navblue  dark:bg-navblueD dark:text-text_w rounded-2xl flex flex-col justify-center mx-2 p-6">
+        <div className="bg-navblue dark:bg-navblueD dark:text-text_w rounded-2xl flex flex-col justify-center mx-2 p-6">
             <div className="bg-white dark:bg-bgdark dark:text-text_w rounded-2xl grid gap-6 justify-center items-center p-4 lg:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4">
                 {loading ? (
                     <BounceLoader color="#505DB1" />
@@ -93,15 +93,13 @@ const SearchResults = () => {
                                 <div className="flex flex-col justify-start bg-gray-900 bg-opacity-50 rounded-t-xl">
                                     <div className="h-[40px] w-[40px] font-awsome bg-navblue dark:bg-bgdark dark:text-white text-text_b flex items-center justify-center mt-4 rounded-xl mr-4"></div>
                                 </div>
-                                <div
-                                    className="w-[200px] font-sans text-sm dark:text-text_w text-black dark:bg-bgdark  flex-row h-[55px] bg-navblue mx-auto mb-4 rounded-xl flex items-center justify-between p-2 gap-3 ">
+                                <div className="w-[200px] font-sans text-sm dark:text-text_w text-black dark:bg-bgdark flex-row h-[55px] bg-navblue mx-auto mb-4 rounded-xl flex items-center justify-between p-2 gap-3">
                                     <div className="flex flex-col justify-center items-center">
                                         <div className="font-sans_b">{item.name}</div>
                                         <div>{item.category_name}</div>
-
                                     </div>
                                     {item.discounted_price && item.discounted_price < item.price ? (
-                                        <div className={"text-sm flex flex-col "}>
+                                        <div className={"text-sm flex flex-col"}>
                                             <span className="text-red-600 font-bold">{item.discounted_price?.toLocaleString() || item.price.toLocaleString()} تومان</span>
                                             <span className="line-through text-black dark:text-text_w ml-2">{item.price?.toLocaleString()} تومان</span>
                                         </div>
@@ -112,7 +110,7 @@ const SearchResults = () => {
                             </div>
                         ))
                     ) : (
-                        <div>موردی برای `${params.search}`s یافت نشد</div>
+                        <div>موردی برای &quot;{params.search}&quot; یافت نشد</div>
                     )
                 )}
             </div>
@@ -145,4 +143,12 @@ const SearchResults = () => {
     );
 };
 
-export default SearchResults;
+const Page = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SearchResults />
+        </Suspense>
+    );
+};
+
+export default Page;

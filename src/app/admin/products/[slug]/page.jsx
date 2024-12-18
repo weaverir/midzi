@@ -6,6 +6,7 @@ import {BounceLoader} from 'react-spinners';
 import Swal from 'sweetalert2';
 import Addpic from "@/components/admin/addpic";
 import AddPic from "@/components/admin/addpic";
+export  const generatemetadata
 
 const EditProduct = () => {
     const [product, setProduct] = useState(null);
@@ -79,8 +80,13 @@ const EditProduct = () => {
     };
 
     const handleCategoryChange = (e) => {
-        setProduct({...product, category: e.target.value});
+        const selectedCategoryId = e.target.value;
+        console.log('Selected Category ID:', selectedCategoryId);
+        setProduct({ ...product, category: selectedCategoryId });
     };
+
+
+
 
     const handleVariantChange = (index, field, value) => {
         const updatedVariants = [...variants];
@@ -267,7 +273,7 @@ const EditProduct = () => {
         formData.append('material', product.material);
         formData.append('discount_percentage', product.discount_percentage);
         formData.append('slug', product.slug);
-        formData.append('category_name', product.category);
+        formData.append('category', product.category); // Ensure the server expects 'category'
         if (thumbnail) {
             formData.append('thumbnail', thumbnail);
         }
@@ -287,6 +293,7 @@ const EditProduct = () => {
             setSavingProduct(false);
         }
     };
+
 
     return (
         <div className="p-4 w-[100%]">
@@ -315,13 +322,20 @@ const EditProduct = () => {
                             onChange={handleCategoryChange}
                             className="p-2 rounded border text-black dark:text-text_w dark:bg-bgdark dark:border-gray-600"
                         >
-                            <option className={"p-2 rounded border text-black dark:text-text_w dark:bg-bgdark dark:border-gray-600"} value="">انتخاب دسته‌بندی</option>
+                            <option
+                                className="p-2 rounded border text-black dark:text-text_w dark:bg-bgdark dark:border-gray-600"
+                                value="">انتخاب دسته‌بندی
+                            </option>
                             {categories.map(category => (
-                                <option className={"p-2 rounded border text-black dark:text-text_w dark:bg-bgdark dark:border-gray-600"} key={category.id} value={category.title}>
+                                <option
+                                    className="p-2 rounded border text-black dark:text-text_w dark:bg-bgdark dark:border-gray-600"
+                                    key={category.id} value={category.id}>
                                     {category.title}
                                 </option>
                             ))}
                         </select>
+
+
                     </div>
                     <div className="flex flex-col mb-4">
                         <label className="mb-2 dark:text-text_w">توضیحات</label>
@@ -333,7 +347,7 @@ const EditProduct = () => {
                         ></textarea>
                     </div>
                     <div className="flex flex-col mb-4">
-                        <label className="mb-2 dark:text-text_w">قیمت</label>
+                    <label className="mb-2 dark:text-text_w">قیمت</label>
                         <input
                             type="text"
                             name="price"
