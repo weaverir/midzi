@@ -55,7 +55,6 @@ const Page = () => {
                     >
                         <p className="text-lg font-semibold">{user.first_name || 'بدون نام'} {user.last_name || ''}</p>
                         <p><strong>شماره تلفن:</strong> {user.phone_number}</p>
-                        <p><strong>آدرس:</strong> {user.address || 'بدون آدرس'}</p>
                         <p><strong>وضعیت:</strong> {user.is_active ? 'فعال' : 'غیرفعال'}</p>
                         <p><strong>تاریخ ایجاد:</strong> {new Date(user.created_at).toLocaleString()}</p>
                         <p><strong>نوع کاربر:</strong> {user.is_admin ? 'ادمین' : 'کاربر معمولی'}</p>

@@ -32,16 +32,16 @@ const Auto = () => {
                 className="mySwiper"
             >
                 <SwiperSlide>
-                    <div className="h-96 bg-myblue mx-2 rounded-2xl"> slider 1 </div>
+                    <div className="h-52 md:h-52 lg:h-64  xl:h-[350px] 2xl:h-96  bg-myblue mx-2 rounded-2xl"> slider 1 </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className="h-96 bg-mygblue mx-2 rounded-2xl"> slider 2 </div>
+                    <div className="h-52 md:h-52 lg:h-64  xl:h-[350px] 2xl:h-96 bg-mygblue mx-2 rounded-2xl"> slider 2 </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className="h-96 bg-mypurple mx-2 rounded-2xl"> slider 3 </div>
+                    <div className="h-52 md:h-52  lg:h-64 xl:h-[350px] 2xl:h-96 bg-mypurple mx-2 rounded-2xl"> slider 3 </div>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className="h-96 bg-mygblue mx-2 rounded-2xl"> slider 4 </div>
+                    <div className="h-52 md:h-52  lg:h-64 xl:h-[350px] 2xl:h-96 bg-mygblue mx-2 rounded-2xl"> slider 4 </div>
                 </SwiperSlide>
             </Swiper>
         </div>

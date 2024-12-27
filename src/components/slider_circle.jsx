@@ -114,7 +114,7 @@ export default function SliderCircle() {
                             className="rounded-full w-[100px] h-[100px] mb-1 bg-cover bg-center"
                             style={{ backgroundImage: `url(https://midzi.liara.run${product.thumbnail})` }}
                         ></div>
-                        <div className="text-text_b">{product.name}</div>
+                        <div className="text-text_b text-sm">{product.name}</div>
                     </div>
                 ))}
             </div>

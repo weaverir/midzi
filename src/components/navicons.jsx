@@ -71,7 +71,7 @@ const NaviCons = () => {
             >
                 🛒
                 {cartItemCount > 0 && (
-                    <div className='absolute bottom-[2px] flex -right-[2px] w-4 h-4 bg-red-700 rounded-full items-center justify-center text-sm'>
+                    <div className='absolute font-sans bottom-[2px] flex -right-[2px] w-4 h-4 bg-red-700 rounded-full items-center justify-center text-sm'>
                         {cartItemCount}
                     </div>
                 )}

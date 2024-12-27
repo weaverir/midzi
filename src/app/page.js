@@ -4,9 +4,8 @@ import Auto from "@/components/silder_auto";
 import PosterB1 from "@/components/poster_b1";
 import S_product2 from "@/components/silder product 2 ";
 import S_product1 from "@/components/silder product3";
-// Fixed typo in import path
+import Tile from "@/components/tile";
 
-// Metadata Function
 export const generateMetadata = () => {
     return {
         title: "فروشگاه میدزی",
@@ -34,21 +33,28 @@ export const generateMetadata = () => {
         icons: {
             icon: "favicon.ico",
         },
+        other: {
+             "enamad" :"52146677",
+
+        },
     };
 };
 
 export default function Home() {
     return (
-        <div className="max-w-[1440px] w-full 2xl:mx-auto mt-10">
-            {/* Main Content Section */}
-            <div className="flex flex-col-reverse 2xl:flex-row xl:flex-row mt-16">
+        <>
 
-                <Auto />
+            <div className="max-w-[1440px] w-full 2xl:mx-auto mt-10">
+                {/* Main Content Section */}
+                <div className="flex flex-col-reverse 2xl:flex-row xl:flex-row mt-16">
+                    <Auto />
+                </div>
+                <Tile />
+
+                {/* Product Sections */}
+                <S_product2 />
+                <S_product1 />
             </div>
-
-            {/* Product Sections */}
-            <S_product2 />
-            <S_product1/>
-        </div>
+        </>
     );
 }

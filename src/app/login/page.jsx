@@ -170,7 +170,6 @@ const List = () => {
                                 name="password"
                                 className="rounded-2xl h-12 bg-navblue my-3 mx-auto shadow-sm flex justify-center w-full"
                                 placeholder="رمز عبور جدید"
-                                value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                             <button

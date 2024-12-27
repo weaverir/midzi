@@ -5,6 +5,7 @@ import axios from 'axios';
 import 'react-input-range/lib/css/index.css'; // Import the CSS for react-input-range
 import InputRange from 'react-input-range'; // Import InputRange
 
+
 const FilterSearch = () => {
     const router = useRouter();
     const [filter1, setFilter1] = useState(false);
@@ -79,12 +80,12 @@ const FilterSearch = () => {
     };
 
     const handleSort = (sortType) => {
-        updateURLParams({ sort: sortType });
+        updateURLParams({ ordering: sortType });
     };
 
     const handleCategorySelect = (category) => {
         setCategory(category);
-        setFilter1(false); // Close the category filter pop-up after selection
+         // Close the category filter pop-up after selection
     };
 
     const handlePriceApply = () => {
@@ -108,7 +109,7 @@ const FilterSearch = () => {
                             <select value={category}  onChange={(e) => handleCategorySelect(e.target.value)} className="rounded p-2">
                                 <option className={"dark:bg-bgdark dark:text-text_w"} value="">انتخاب دسته بندی</option>
                                 {categories.map(cat => (
-                                    <option className={"dark:bg-bgdark dark:text-text_w"} key={cat.id} value={cat.title}>{cat.title}</option>
+                                    <option className={"dark:bg-bgdark dark:text-text_w"} key={cat.id} value={cat.id}>{cat.title}</option>
                                 ))}
                             </select>
                         </div>
@@ -128,10 +129,10 @@ const FilterSearch = () => {
                 </div>
                 {filter2 ? (
                     <div className="text-text_b absolute flex flex-col justify-center z-50 top-12 right-0 bg-navblue rounded-xl">
-                        <ul className="cursor-pointer px-4 py-2 hover:bg-myblue hover:text-white hover:rounded-xl rounded-md" onClick={() => handleSort('newest')}>جدیدترین</ul>
-                        <ul className="cursor-pointer px-4 py-2 hover:bg-myblue hover:text-white hover:rounded-xl rounded-md" onClick={() => handleSort('highest')}>گرانترین</ul>
-                        <ul className="cursor-pointer px-4 py-2 hover:bg-myblue hover:text-white hover:rounded-xl rounded-md" onClick={() => handleSort('lowest')}>ارزانترین</ul>
-                        <ul className="cursor-pointer px-4 py-2 hover:bg-myblue hover:text-white hover:rounded-xl rounded-md" onClick={() => handleSort('popular')}>محبوبترین</ul>
+                        <ul className="cursor-pointer px-4 py-2 hover:bg-myblue hover:text-white hover:rounded-xl rounded-md" >جدیدترین</ul>
+                        <ul className="cursor-pointer px-4 py-2 hover:bg-myblue hover:text-white hover:rounded-xl rounded-md" onClick={() => handleSort('-price')}>گرانترین</ul>
+                        <ul className="cursor-pointer px-4 py-2 hover:bg-myblue hover:text-white hover:rounded-xl rounded-md" onClick={() => handleSort('price')}>ارزانترین</ul>
+                        <ul className="cursor-pointer px-4 py-2 hover:bg-myblue hover:text-white hover:rounded-xl rounded-md" onClick={() => handleSort('like')}>محبوبترین</ul>
                     </div>
                 ) : null}
             </div>
@@ -144,14 +145,16 @@ const FilterSearch = () => {
                     <p className="font-awsome text-text_w text-xl">  </p> فیلتر بر اساس قیمت <p className="font-awsome text-text_w text-xl"></p>
                 </div>
                 {priceFilterOpen ? (
-                    <div className="absolute max-w-[300] flex flex-col z-50 top-12 right-0 p-5 bg-navblue text-text_b rounded-xl">
+                    <div className="absolute max-w-[350px] flex flex-col z-50 top-12 right-0 p-5 bg-navblue text-text_b overflow-hidden rounded-xl">
                         <label className="mb-2">بر اساس قیمت</label>
                         <InputRange
+                            className="custom-input-range overflow-hidden"
                             formatLabel={() => ''}
-                            maxValue={2000}
-                            minValue={1000}
+                            maxValue={4000000}
+                            minValue={100000}
                             value={priceRange}
-                            onChange={value => setPriceRange(value)} />
+                            onChange={value => setPriceRange(value)}
+                        />
                         <div className="flex flex-row gap-4 mt-2">
                             <div className="flex w-[50%] flex-col">
                                 <label>از:</label>
@@ -168,9 +171,12 @@ const FilterSearch = () => {
                                     type="number"
                                     value={priceRange.max}
                                     readOnly
-                                    className="rounded  p-2"
+                                    className="rounded p-2"
                                 />
-                            </div>
+
+
+                    </div>
+
                         </div>
                         <button className="bg-myblue rounded-2xl p-2 mt-2 text-text_w" onClick={handlePriceApply}>اعمال قیمت </button>
                     </div>

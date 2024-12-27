@@ -1,12 +1,10 @@
 "use client";
-import React, {useState, useEffect} from 'react';
-import {useRouter, useSearchParams} from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import axiosInstance from '@/lib/axios';
-import {BounceLoader} from 'react-spinners';
+import { BounceLoader } from 'react-spinners';
 import Swal from 'sweetalert2';
-import Addpic from "@/components/admin/addpic";
 import AddPic from "@/components/admin/addpic";
-export  const generatemetadata
 
 const EditProduct = () => {
     const [product, setProduct] = useState(null);
@@ -17,11 +15,10 @@ const EditProduct = () => {
     const [thumbnail, setThumbnail] = useState(null);
     const [loading, setLoading] = useState(true);
     const [savingProduct, setSavingProduct] = useState(false);
-    const [savingVariants, setSavingVariants] = useState(false);
     const [showColorModal, setShowColorModal] = useState(false);
-    const [newColor, setNewColor] = useState({name: '', hex_code: ''});
+    const [newColor, setNewColor] = useState({ name: '', hex_code: '' });
     const [showSizeModal, setShowSizeModal] = useState(false);
-    const [newSize, setNewSize] = useState({name: '', description: ''});
+    const [newSize, setNewSize] = useState({ name: '', description: '' });
     const router = useRouter();
     const searchParams = useSearchParams();
     const productId = searchParams.get('id');
@@ -65,6 +62,36 @@ const EditProduct = () => {
             console.error('Error fetching colors:', error);
         }
     };
+    const handleAddSize = async () => {
+        setLoading(true);
+        try {
+            await axiosInstance.post(`/padmin/sizes/create/`, newSize);
+            Swal.fire('اندازه اضافه شد!', 'اندازه جدید با موفقیت اضافه شد.', 'success');
+            setShowSizeModal(false);
+            fetchSizes(); // Refresh sizes
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'خطا در افزودن اندازه.';
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleAddColor = async () => {
+        setLoading(true);
+        try {
+            await axiosInstance.post(`/padmin/product/color/`, newColor);
+            Swal.fire('رنگ اضافه شد!', 'رنگ جدید با موفقیت اضافه شد.', 'success');
+            setShowColorModal(false);
+            fetchColors(); // Refresh colors
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'خطا در افزودن رنگ.';
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
 
     const fetchSizes = async () => {
         try {
@@ -75,19 +102,14 @@ const EditProduct = () => {
         }
     };
     const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setProduct({...product, [name]: value});
+        const { name, value } = e.target;
+        setProduct({ ...product, [name]: value });
     };
 
     const handleCategoryChange = (e) => {
         const selectedCategoryId = e.target.value;
-        console.log('Selected Category ID:', selectedCategoryId);
         setProduct({ ...product, category: selectedCategoryId });
     };
-
-
-
-
     const handleVariantChange = (index, field, value) => {
         const updatedVariants = [...variants];
         updatedVariants[index][field] = value;
@@ -98,21 +120,21 @@ const EditProduct = () => {
         Swal.fire({
             title: 'افزودن نوع جدید',
             html: `
-            <select id="color" class="swal2-input">
-                <option value="">انتخاب رنگ</option>
-                ${colors.map(color => `<option value="${color.name}">${color.name} (${color.id}) (${color.hex_code})</option>`).join('')}
-            </select>
-            <input type="text" id="color_id" class="swal2-input" placeholder="آیدی رنگ" disabled>
-            <input type="text" id="hex_code" class="swal2-input" placeholder="کد رنگ" disabled>
-            <select id="size" class="swal2-input">
-                <option value="">انتخاب اندازه</option>
-                ${sizes.map(size => `<option value="${size.name}">${size.name} (${size.id})</option>`).join('')}
-            </select>
-            <input type="text" id="size_id" class="swal2-input" placeholder="آیدی اندازه" disabled>
-            <input type="text" id="stock" class="swal2-input" placeholder="موجودی">
-            <input type="text" id="price" class="swal2-input" placeholder="قیمت">
-            <input type="text" id="discount_percentage" class="swal2-input" placeholder="تخفیف">
-        `,
+                <select id="color" class="swal2-input">
+                    <option value="">انتخاب رنگ</option>
+                    ${colors.map(color => `<option value="${color.name}">${color.name} (${color.id}) (${color.hex_code})</option>`).join('')}
+                </select>
+                <input type="text" id="color_id" class="swal2-input" placeholder="آیدی رنگ" disabled>
+                <input type="text" id="hex_code" class="swal2-input" placeholder="کد رنگ" disabled>
+                <select id="size" class="swal2-input">
+                    <option value="">انتخاب اندازه</option>
+                    ${sizes.map(size => `<option value="${size.name}">${size.name} (${size.id})</option>`).join('')}
+                </select>
+                <input type="text" id="size_id" class="swal2-input" placeholder="آیدی اندازه" disabled>
+                <input type="text" id="stock" class="swal2-input" placeholder="موجودی">
+                <input type="text" id="price" class="swal2-input" placeholder="قیمت">
+                <input type="text" id="discount_percentage" class="swal2-input" placeholder="تخفیف">
+            `,
             focusConfirm: false,
             preConfirm: () => {
                 return {
@@ -140,22 +162,6 @@ const EditProduct = () => {
             document.getElementById('size_id').value = selectedSize ? selectedSize.id : '';
         });
     };
-    const handleAddColor = async () => {
-        setLoading(true);
-        try {
-            await axiosInstance.post(`/padmin/product/color/`, newColor);
-            Swal.fire('رنگ اضافه شد!', 'رنگ جدید با موفقیت اضافه شد.', 'success');
-            setShowColorModal(false);
-            fetchColors(); // Refresh colors
-        } catch (error) {
-            console.error('Error adding color:', error);
-            Swal.fire('خطا!', 'خطا در افزودن رنگ.', 'error');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
 
     const saveNewVariant = async (variant) => {
         try {
@@ -170,32 +176,30 @@ const EditProduct = () => {
             Swal.fire('خطا!', 'خطا در ذخیره نوع جدید.', 'error');
         }
     };
+
     const handleEditVariant = (index) => {
         const variant = variants[index];
         Swal.fire({
             title: 'ویرایش نوع',
             html: `
-                <select id="color" class="swal2-input">
-                    <option value="">انتخاب رنگ</option>
-                    ${colors.map(color => `<option value="${color.name}" ${color.name === variant.color.name ? 'selected' : ''}>${color.name} (${color.hex_code})</option>`).join('')}
-                </select>
-                <input type="text" id="hex_code" class="swal2-input" value="${variant.color.hex_code}" placeholder="کد رنگ" disabled>
-                <select id="size" class="swal2-input">
-                    <option value="">انتخاب اندازه</option>
-                    ${sizes.map(size => `<option value="${size.name}" ${size.name === variant.size.name ? 'selected' : ''}>${size.name}</option>`).join('')}
-                </select>
-                <input type="text" id="stock" class="swal2-input" value="${variant.stock}" placeholder="موجودی">
-                <input type="text" id="price" class="swal2-input" value="${variant.price}" placeholder="قیمت">
-                <input type="text" id="discount_percentage" class="swal2-input" value="${variant.discount_percentage}" placeholder="تخفیف">
-            `,
+            <select id="color" class="swal2-input">
+                <option value="">انتخاب رنگ</option>
+                ${colors.map(color => `<option value="${color.id}" ${color.id === variant.color.id ? 'selected' : ''}>${color.name} (${color.hex_code})</option>`).join('')}
+            </select>
+            <input type="text" id="hex_code" class="swal2-input" value="${variant.color.hex_code}" placeholder="کد رنگ" disabled>
+            <select id="size" class="swal2-input">
+                <option value="">انتخاب اندازه</option>
+                ${sizes.map(size => `<option value="${size.id}" ${size.id === variant.size.id ? 'selected' : ''}>${size.name}</option>`).join('')}
+            </select>
+            <input type="text" id="stock" class="swal2-input" value="${variant.stock}" placeholder="موجودی">
+            <input type="text" id="price" class="swal2-input" value="${variant.price}" placeholder="قیمت">
+            <input type="text" id="discount_percentage" class="swal2-input" value="${variant.discount_percentage}" placeholder="تخفیف">
+        `,
             focusConfirm: false,
             preConfirm: () => {
                 return {
-                    color: {
-                        name: document.getElementById('color').value,
-                        hex_code: document.getElementById('hex_code').value
-                    },
-                    size: {name: document.getElementById('size').value},
+                    color: document.getElementById('color').value,
+                    size: document.getElementById('size').value,
                     stock: document.getElementById('stock').value,
                     price: document.getElementById('price').value,
                     discount_percentage: document.getElementById('discount_percentage').value
@@ -203,44 +207,24 @@ const EditProduct = () => {
             }
         }).then((result) => {
             if (result.value) {
-                const updatedVariant = {...variant, ...result.value};
+                const updatedVariant = { ...variant, ...result.value };
                 setVariants(variants.map((v, i) => i === index ? updatedVariant : v));
                 saveVariant(updatedVariant);
             }
         });
 
         document.getElementById('color').addEventListener('change', (e) => {
-            const selectedColor = colors.find(color => color.name === e.target.value);
+            const selectedColor = colors.find(color => color.id === parseInt(e.target.value));
             document.getElementById('hex_code').value = selectedColor ? selectedColor.hex_code : '';
         });
     };
-    const handleAddSize = async () => {
-        setLoading(true);
-        try {
-            await axiosInstance.post(`/padmin/sizes/create/`, newSize);
-            Swal.fire('اندازه اضافه شد!', 'اندازه جدید با موفقیت اضافه شد.', 'success');
-            setShowSizeModal(false);
-            fetchSizes(); // Refresh sizes
-        } catch (error) {
-            console.error('Error adding size:', error);
-            Swal.fire('خطا!', 'خطا در افزودن اندازه.', 'error');
-        } finally {
-            setLoading(false);
-        }
-    };
-
 
     const saveVariant = async (variant) => {
         try {
             await axiosInstance.put(`/padmin/product-variant/${variant.id}/`, {
                 product: productId,
-                color: {
-                    name: variant.color.name,
-                    hex_code: variant.color.hex_code
-                },
-                size: {
-                    name: variant.size.name
-                },
+                color: variant.color, // Send color id
+                size: variant.size,   // Send size id
                 stock: variant.stock,
                 price: variant.price,
                 discount_percentage: variant.discount_percentage
@@ -252,14 +236,23 @@ const EditProduct = () => {
         }
     };
 
-    const handleDeleteVariant = (index) => {
-        const updatedVariants = variants.filter((variant, i) => i !== index);
-        setVariants(updatedVariants);
+
+    const handleDeleteVariant = async (index) => {
+        const variant = variants[index];
+        try {
+            await axiosInstance.delete(`/padmin/product-variant/${variant.id}/`);
+            setVariants(variants.filter((_, i) => i !== index));
+            Swal.fire('حذف شد!', 'نوع محصول با موفقیت حذف شد.', 'success');
+        } catch (error) {
+            console.error('Error deleting variant:', error);
+            Swal.fire('خطا!', 'خطا در حذف نوع محصول.', 'error');
+        }
     };
 
     const handleThumbnailChange = (e) => {
         setThumbnail(e.target.files[0]);
     };
+
     const handleSaveProduct = async () => {
         setSavingProduct(true);
         const formData = new FormData();
@@ -293,8 +286,6 @@ const EditProduct = () => {
             setSavingProduct(false);
         }
     };
-
-
     return (
         <div className="p-4 w-[100%]">
             {loading ? (
@@ -334,8 +325,6 @@ const EditProduct = () => {
                                 </option>
                             ))}
                         </select>
-
-
                     </div>
                     <div className="flex flex-col mb-4">
                         <label className="mb-2 dark:text-text_w">توضیحات</label>
@@ -347,7 +336,7 @@ const EditProduct = () => {
                         ></textarea>
                     </div>
                     <div className="flex flex-col mb-4">
-                    <label className="mb-2 dark:text-text_w">قیمت</label>
+                        <label className="mb-2 dark:text-text_w">قیمت</label>
                         <input
                             type="text"
                             name="price"
@@ -372,7 +361,7 @@ const EditProduct = () => {
                             type="checkbox"
                             name="available"
                             checked={product.available}
-                            onChange={(e) => handleInputChange({target: {name: 'available', value: e.target.checked}})}
+                            onChange={(e) => handleInputChange({ target: { name: 'available', value: e.target.checked } })}
                             className="p-2 rounded border text-black dark:text-text_w dark:bg-bgdark dark:border-gray-600"
                         />
                     </div>
@@ -464,7 +453,7 @@ const EditProduct = () => {
                                     className="px-4 py-2 text-red-500"
                                     onClick={() => handleDeleteVariant(index)}
                                 >
-                                    <i className="fa fa-trash"> حدف</i>
+                                    <i className="fa fa-trash"> حذف</i>
                                 </button>
                             </div>
                         </div>

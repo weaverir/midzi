@@ -42,14 +42,30 @@ const RightSidebar = () => {
                         </div>
                     </div>
                     <div className="flex flex-col justify-center items-center gap-8 w-full">
-                        <div className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer" onClick={() => router.push('/user/cart')}>سبد خرید</div>
-                        <div className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer" onClick={() => router.push('/user/orders')}>سفارش ها</div>
-                        <div className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer" onClick={handleLogout}>خروج</div>
+                        <div
+                            className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer"
+                            onClick={() => router.push('/user')}>اطلاعات کاربری
+                        </div>
+
+                        <div
+                            className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer"
+                            onClick={() => router.push('/user/cart')}>سبد خرید
+                        </div>
+
+                        <div
+                            className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer"
+                            onClick={() => router.push('/user/orders')}>سفارش ها
+                        </div>
+                        <div
+                            className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer"
+                            onClick={handleLogout}>خروج
+                        </div>
                     </div>
                 </div>
             </div>
             {isMenuOpen && (
-                <div className="lg:hidden fixed top-0 left-0 w-full h-full bg-navblue dark:bg-navblueD flex flex-col items-center justify-center z-50">
+                <div
+                    className="lg:hidden fixed top-0 left-0 w-full h-full bg-navblue dark:bg-navblueD flex flex-col items-center justify-center z-50">
                     <button
                         className="absolute top-4 right-4 text-xl bg-myblue text-white p-2 rounded"
                         onClick={handleMenuToggle}
@@ -63,15 +79,32 @@ const RightSidebar = () => {
                         </div>
                     </div>
                     <div className="flex flex-col justify-center items-center gap-8 w-full mt-8">
-                        <div className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer" onClick={() => {
-                            router.push('/user/cart')
-                            setIsMenuOpen(false)
-                        }}>سبد خرید</div>
-                        <div className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer" onClick={() => {
-                            router.push('/user/orders')
-                            setIsMenuOpen(false)
-                        }}>سفارش ها</div>
-                        <div className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer" onClick={handleLogout}>خروج</div>
+                        <div
+                            className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer"
+                            onClick={() => {
+                                router.push('/user')
+                                setIsMenuOpen(false)
+                            }}>اطلاعات کاربری
+                        </div>
+                        <div
+                            className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer"
+                            onClick={() => {
+                                router.push('/user/cart')
+                                setIsMenuOpen(false)
+                            }}>سبد خرید
+                        </div>
+
+                        <div
+                            className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer"
+                            onClick={() => {
+                                router.push('/user/orders')
+                                setIsMenuOpen(false)
+                            }}>سفارش ها
+                        </div>
+                        <div
+                            className="flex h-12 w-[70%] rounded-full dark:bg-bgdark dark:text-text_w bg-white shadow-lg justify-center p-4 items-center text-black cursor-pointer"
+                            onClick={handleLogout}>خروج
+                        </div>
                     </div>
                 </div>
             )}

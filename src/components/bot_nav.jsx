@@ -8,7 +8,6 @@ const BotNav = () => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [showSubcategories, setShowSubcategories] = useState(false);
-    const [popupStyle, setPopupStyle] = useState({ top: 0, left: 0 });
     const router = useRouter();
     const popupRef = useRef();
 
@@ -46,17 +45,19 @@ const BotNav = () => {
     };
 
     const categoryList = buildCategoryList(categories);
-    const handleCategoryClick = (category) => {
-        const categoryElement = document.getElementById(`category-${category.id}`);
-        const rect = categoryElement.getBoundingClientRect();
 
-        if (category.subcategories.length > 0) {
-            setSelectedCategory(category);
-            setPopupStyle({ top: rect.bottom, left: rect.left });
-            setShowSubcategories(true);
-        } else {
-            router.push(`/search?category=${category.title}`);
-        }
+    const handleCategoryMouseEnter = (category) => {
+        setSelectedCategory(category);
+        setShowSubcategories(true);
+    };
+
+    const handleCategoryMouseLeave = () => {
+        setShowSubcategories(false);
+        setSelectedCategory(null);
+    };
+
+    const handleCategoryClick = (category) => {
+        router.push(`/search?category=${category.id}`);
     };
 
     const closePopup = () => {
@@ -81,16 +82,34 @@ const BotNav = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showSubcategories]);
+
     return (
         <div className="relative font-sans_b w-[70%] mx-auto hidden lg:block">
             <div className="flex-row mx-auto items-center justify-between content-center max-w-[1200px] bg-navblue h-12 w-[80%] border-t dark:border-t-bgdark rounded-br-2xl rounded-bl-2xl dark:text-text_w dark:bg-navblueD">
                 <ul className="flex flex-row items-center justify-start content-center gap-3 mx-3 font-sans_m dark:text-text_w">
-                    <li onClick={() => setShowSubcategories(true)} className="cursor-pointer">دسته بندی</li>
+                    <li
+                        className="cursor-pointer"
+                        onMouseEnter={() => setShowSubcategories(true)}
+                    >
+                        دسته بندی
+                    </li>
+                    <li
+                        className="cursor-pointer"
+                        onClick={() => router.push(`/search?search=`)}>همه محصولات
+                    </li>
+                    <li
+                        className="cursor-pointer"
+                        onClick={() => router.push(`/search?discount=true`)}>تخفیف ها
+                    </li>
                 </ul>
             </div>
 
             {showSubcategories && (
-                <div ref={popupRef} className="absolute top-16 left-1/2 transform bg-navblue -translate-x-1/2 w-full max-w-xl  dark:bg-navblueD p-4 rounded-lg shadow-lg z-50">
+                <div
+                    ref={popupRef}
+                    className="absolute top-16 left-1/2 transform bg-navblue -translate-x-1/2 w-full max-w-xl dark:bg-navblueD p-4 rounded-lg shadow-lg z-50"
+                    onMouseLeave={handleCategoryMouseLeave}
+                >
                     <button className="absolute top-2 right-2 text-black dark:text-text_w" onClick={closePopup}>✖</button>
                     <h2 className="text-lg font-bold mb-4 dark:text-text_w">محصولات</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -99,8 +118,9 @@ const BotNav = () => {
                                 <li
                                     key={category.id}
                                     id={`category-${category.id}`}
+                                    onMouseEnter={() => handleCategoryMouseEnter(category)}
                                     onClick={() => handleCategoryClick(category)}
-                                    className="cursor-pointer bg-white dark:bg-bgdark rounded"
+                                    className="cursor-pointer border-b-2 dark:bg-bgdark rounded"
                                 >
                                     {category.title} {category.subcategories.length > 0 && '◀'}
                                 </li>
@@ -111,8 +131,8 @@ const BotNav = () => {
                                 {selectedCategory.subcategories.map((subcategory) => (
                                     <li
                                         key={subcategory.id}
-                                        onClick={() => router.push(`/search?category=${subcategory.title}`)}
-                                        className="cursor-pointer bg-white dark:bg-bgdark rounded"
+                                        onClick={() => router.push(`/search?category=${subcategory.id}`)}
+                                        className="cursor-pointer border-b-2 rounded"
                                     >
                                         {subcategory.title}
                                     </li>

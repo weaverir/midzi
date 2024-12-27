@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '@/lib/axios';
 import { toast } from 'react-hot-toast';
+import Colors from "@/components/colors";
+import Size  from "@/components/size";
 
 const Page = () => {
     const [categories, setCategories] = useState([]);
@@ -72,7 +74,7 @@ const Page = () => {
     const renderCategoryTree = (categories) => {
         return categories.map(category => (
             <li key={category.id}>
-                <div className="p-4 border rounded-lg flex flex-row justify-between dark:border-gray-600 dark:bg-gray-700 dark:text-white mb-2">
+                <div className="p-4 border bg-white dark:bg-bgdark rounded-lg flex flex-row justify-between dark:border-gray-600  dark:text-white mb-2">
                     <div className={"flex flex-col"}>
                         <p className="text-lg font-semibold">{category.title}</p>
                         {category.parent_title && <p className="text-sm text-gray-400">والد: {category.parent_title}</p>}
@@ -92,16 +94,16 @@ const Page = () => {
     };
 
     return (
-        <div className="p-4">
-            <h1 className="text-2xl mb-4">دسته‌بندی‌ها</h1>
+        <div className="p-4 bg-navblue dark:bg-navblueD lg:w-[70%] ">
+            <h1 className="text-2xl dark:text-text_w mb-4">دسته‌بندی‌ها</h1>
             <ul>
                 {categories.length > 0 ? (
                     renderCategoryTree(categories)
                 ) : (
-                    <li className="text-center p-4">هیچ دسته‌بندی موجود نیست</li>
+                    <li className="text-center  p-4">هیچ دسته‌بندی موجود نیست</li>
                 )}
             </ul>
-            <div className="mt-6 p-4 border rounded-lg dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+            <div className="mt-6 p-4 border bg-white dark:bg-bgdark  rounded-lg dark:border-gray-600  dark:text-white">
                 <h2 className="text-xl font-semibold mb-2">افزودن دسته‌بندی جدید</h2>
                 <input
                     type="text"
@@ -131,6 +133,8 @@ const Page = () => {
                     افزودن
                 </button>
             </div>
+            <Colors/>
+            <Size/>
         </div>
     );
 };

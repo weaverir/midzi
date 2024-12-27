@@ -11,6 +11,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import SliderCircle from "@/components/slider_circle";
 import { BounceLoader } from "react-spinners";
+import axios from "axios";
 
 function SinglePage() {
     const { fetchCartItemCount } = useContext(CartContext);
@@ -27,6 +28,7 @@ function SinglePage() {
     const [discountedPrice, setDiscountedPrice] = useState(null);
     const [selectedVariantId, setSelectedVariantId] = useState(null);
     const [quantity, setQuantity] = useState(1);
+    const [variantStock, setVariantStock] = useState(null);
 
     useEffect(() => {
         const productName = pathname.split("/").pop();
@@ -39,7 +41,7 @@ function SinglePage() {
 
     const fetchProductDetails = async (name) => {
         try {
-            const response = await axiosInstance.get(`/products/${name}`);
+            const response = await axios.get(`https://midzi.liara.run/products/${name}`);
             setProduct(response.data);
             setPrice(response.data.price);
             setDiscountPercentage(response.data.discount_percentage);
@@ -87,6 +89,7 @@ function SinglePage() {
                 setDiscountPercentage(variant.discount_percentage);
                 setDiscountedPrice(variant.discounted_price);
                 setSelectedVariantId(variant.id);
+                setVariantStock(variant.stock); // Update stock for the selected variant
                 console.log("شناسه نوع انتخابی:", variant.id);
             } else {
                 console.log("نوع مطابق با رنگ و اندازه انتخاب شده موجود نیست.");
@@ -97,6 +100,11 @@ function SinglePage() {
     const handleAddToCart = () => {
         if (!selectedVariantId) {
             toast.error("لطفاً هم رنگ و هم اندازه را انتخاب کنید.");
+            return;
+        }
+
+        if (quantity > variantStock) {
+            toast.error("تعداد انتخاب شده بیش از موجودی انبار است.");
             return;
         }
 
@@ -136,7 +144,7 @@ function SinglePage() {
 
     const handleQuantityChange = (operation) => {
         setQuantity((prevQuantity) => {
-            if (operation === "increment") {
+            if (operation === "increment" && prevQuantity < variantStock) {
                 return prevQuantity + 1;
             }
             if (operation === "decrement" && prevQuantity > 1) {
@@ -153,7 +161,6 @@ function SinglePage() {
     if (!product) {
         return <div className="text-center text-xl mt-10">محصول پیدا نشد.</div>;
     }
-
     return (
         <>
             <div className="bg-navblue dark:bg-navblueD dark:text-text_w font-sans_b rounded-2xl mx-auto w-[95%] lg:w-[80%] xl:w-[70%] my-4 p-4">
@@ -191,50 +198,66 @@ function SinglePage() {
                         </div>
                         <div className="bg-white dark:bg-bgdark dark:text-text_w rounded-xl shadow-lg p-4 mb-4">
                             <p className="text-black dark:text-text_w font-semibold text-2xl mb-2">رنگ بندی</p>
-                            <div className="flex justify-center gap-3 px-3">
-                                {product.variants
-                                    .map((variant) => variant.color)
-                                    .filter(
-                                        (value, index, self) =>
-                                            value && self.findIndex((v) => v.name === value.name) === index
-                                    )
-                                    .map((color, index) => (
-                                        <div key={index} className="flex flex-col cursor-pointer" onClick={() => handleColorChange(color)}>
+                            <div className="grid justify-center gap-3 px-3 grid-cols-3 md:grid-cols-3 lg:grid-cols-4">
+                                {product.variants.map((variant) => variant.color)
+                                    .filter((value, index, self) => value && self.findIndex((v) => v.name === value.name) === index)
+                                    .map((color, index) => {
+                                        const allSizesOutOfStock = product.variants
+                                            .filter((variant) => variant.color.name === color.name)
+                                            .every((variant) => variant.stock === 0);
+                                        return (
                                             <div
-                                                className={`rounded-tr-xl rounded-tl-xl border-t-2 border-l-2 border-r-2 h-10 w-20 ${
-                                                    selectedColor && selectedColor.name === color.name
-                                                        ? "border-t-green-500 border-l-green-500 border-r-green-500"
-                                                        : ""
-                                                }`}
-                                                style={{ backgroundColor: color.hex_code }}
-                                            ></div>
-                                            <div
-                                                className={`rounded-br-xl dark:bg-bgdark border-b-2 border-l-2 border-r-2 dark:text-text_w rounded-bl-xl ${
-                                                    selectedColor && selectedColor.name === color.name
-                                                        ? "border-b-green-500 border-l-green-500 border-r-green-500"
-                                                        : ""
-                                                } shadow-2xl h-10 w-20 border-2 items-center justify-center flex`}
+                                                key={index}
+                                                className={`flex flex-col cursor-pointer ${allSizesOutOfStock ? 'cursor-not-allowed opacity-50' : ''}`}
+                                                onClick={() => !allSizesOutOfStock && handleColorChange(color)}
                                             >
-                                                {color.name}
+                                                <div
+                                                    className={`rounded-tr-xl rounded-tl-xl border-t-2 border-l-2 border-r-2 h-10 w-20 ${
+                                                        selectedColor && selectedColor.name === color.name
+                                                            ? "border-t-green-500 border-l-green-500 border-r-green-500"
+                                                            : ""
+                                                    }`}
+                                                    style={{ backgroundColor: color.hex_code }}
+                                                ></div>
+                                                <div
+                                                    className={`rounded-br-xl dark:bg-bgdark border-b-2 border-l-2 border-r-2 dark:text-text_w rounded-bl-xl ${
+                                                        selectedColor && selectedColor.name === color.name
+                                                            ? "border-b-green-500 border-l-green-500 border-r-green-500"
+                                                            : ""
+                                                    } shadow-2xl h-10 w-20 border-2 items-center justify-center flex relative`}
+                                                >
+                                                    {color.name}
+                                                    {allSizesOutOfStock && (
+                                                        <div className="absolute inset-0 bg-white dark:bg-bgdark flex items-center justify-center text-red-500 font-bold">
+                                                            نا موجود
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                             </div>
                         </div>
                         <div className="bg-white dark:bg-bgdark dark:text-text_w rounded-xl shadow-lg p-4 mb-4">
                             <p className="text-black dark:text-text_w font-semibold text-2xl mb-2">سایز بندی</p>
-                            <div className="flex justify-center gap-3 px-3">
-                                {availableSizes.map((size, index) => (
-                                    <div
-                                        key={index}
-                                        className={`rounded-xl justify-center dark:bg-bgdark dark:text-text_w items-center flex bg-white h-10 w-20 border-2 cursor-pointer ${
-                                            selectedSize && selectedSize.name === size.name ? "border-green-500" : ""
-                                        }`}
-                                        onClick={() => handleSizeChange(size)}
-                                    >
-                                        {size.name}
-                                    </div>
-                                ))}
+                            <div className="grid justify-center gap-3 px-3 grid-cols-3 md:grid-cols-3 lg:grid-cols-4">
+                                {availableSizes.map((size, index) => {
+                                    const sizeOutOfStock = product.variants
+                                        .filter((variant) => variant.size.name === size.name)
+                                        .every((variant) => variant.stock === 0);
+                                    return (
+                                        <div
+                                            key={index}
+                                            className={`rounded-xl justify-center dark:bg-bgdark dark:text-text_w items-center flex bg-white h-10 w-20 border-2 cursor-pointer ${
+                                                selectedSize && selectedSize.name === size.name ? "border-green-500" : ""
+                                            } ${sizeOutOfStock ? "cursor-not-allowed opacity-20" : ""}`}
+                                            onClick={() => !sizeOutOfStock && handleSizeChange(size)}
+                                        >
+                                            {size.name}
+
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                         <div className="bg-white dark:bg-bgdark dark:text-text_w rounded-xl shadow-lg p-4 mb-4">
@@ -247,12 +270,14 @@ function SinglePage() {
                                 <button className="px-2 py-1 border rounded-lg shadow-lg bg-green-500" onClick={() => handleQuantityChange("increment")}>
                                     +
                                 </button>
+                                <p className="text-center text-gray-500 mt-2">موجودی انبار: {variantStock}</p>
                             </div>
                         </div>
                         <div className="flex justify-center mx-2 mt-4">
                             <button
                                 className="bg-myblue text-text_w rounded-full w-[150px] h-[40px] shadow-lg"
                                 onClick={handleAddToCart}
+                                disabled={!selectedVariantId || product.variants.find(variant => variant.id === selectedVariantId)?.stock === 0}
                             >
                                 اضافه به سبد خرید
                             </button>
@@ -261,7 +286,7 @@ function SinglePage() {
                 </div>
                 <div className="flex flex-col gap-9 bg-white dark:bg-bgdark rounded-2xl p-2 my-2 justify-between items-start">
                     <h2 className="text-2xl">توضیحات محصول</h2>
-                    <div className="text-black  dark:text-text_w font-semibold text-xl">{product.description}</div>
+                    <div className="text-black dark:text-text_w font-semibold text-xl">{product.description}</div>
                 </div>
             </div>
         </>

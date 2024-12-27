@@ -93,9 +93,9 @@ const SearchResults = () => {
                                 <div className="flex flex-col justify-start bg-gray-900 bg-opacity-50 rounded-t-xl">
                                     <div className="h-[40px] w-[40px] font-awsome bg-navblue dark:bg-bgdark dark:text-white text-text_b flex items-center justify-center mt-4 rounded-xl mr-4"></div>
                                 </div>
-                                <div className="w-[200px] font-sans text-sm dark:text-text_w text-black dark:bg-bgdark flex-row h-[55px] bg-navblue mx-auto mb-4 rounded-xl flex items-center justify-between p-2 gap-3">
+                                <div className="w-[215px] font-sans text-sm dark:text-text_w text-black dark:bg-bgdark flex-row h-[60px] bg-navblue mx-auto mb-4 rounded-xl flex items-center justify-between p-2 gap-3">
                                     <div className="flex flex-col justify-center items-center">
-                                        <div className="font-sans_b">{item.name}</div>
+                                        <div className="font-sans_b text-sm">{item.name}</div>
                                         <div>{item.category_name}</div>
                                     </div>
                                     {item.discounted_price && item.discounted_price < item.price ? (

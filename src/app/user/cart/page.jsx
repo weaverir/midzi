@@ -3,9 +3,13 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '@/lib/axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2';
 
 const Page = () => {
     const [basketItems, setBasketItems] = useState([]);
+    const [addresses, setAddresses] = useState([]);
+    const [selectedAddress, setSelectedAddress] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState('reserve');
     const router = useRouter();
 
     useEffect(() => {
@@ -15,6 +19,7 @@ const Page = () => {
             router.push('/login'); // Redirect to /login if not logged in
         } else if (currentBasketId) {
             fetchBasketItems(currentBasketId);
+            fetchAddresses();
         }
     }, [router]);
 
@@ -22,7 +27,20 @@ const Page = () => {
         try {
             const response = await axiosInstance.get(`https://midzi.liara.run/accounts/basket/${basketId}/items/`);
             if (response.status === 200) {
-                setBasketItems(response.data.basket.items);
+                const items = response.data.basket.items;
+                // Remove items with zero stock and update quantities exceeding stock
+                const updatedItems = [];
+                for (const item of items) {
+                    if (item.product_variant.stock === 0) {
+                        await removeFromCart(item); // Remove item if stock is 0
+                    } else if (item.quantity > item.product_variant.stock) {
+                        await updateItemQuantity(item, item.product_variant.stock); // Update quantity to max stock
+                        updatedItems.push({ ...item, quantity: item.product_variant.stock });
+                    } else {
+                        updatedItems.push(item);
+                    }
+                }
+                setBasketItems(updatedItems);
             }
         } catch (error) {
             console.error('Error fetching basket items:', error);
@@ -30,10 +48,52 @@ const Page = () => {
         }
     };
 
+    const fetchAddresses = async () => {
+        try {
+            const response = await axiosInstance.get('https://midzi.liara.run/accounts/addresses/');
+            setAddresses(response.data);
+        } catch (error) {
+            console.error('Error fetching addresses:', error);
+            toast.error('خطا در دریافت آدرس‌ها.');
+        }
+    };
+
+    const addAddress = () => {
+        Swal.fire({
+            title: 'افزودن آدرس جدید',
+            html: `
+                <input type="text" id="address" class="swal2-input" placeholder="آدرس">
+                <input type="text" id="post_Code" class="swal2-input" placeholder="کد پستی">
+                <input type="text" id="province" class="swal2-input" placeholder="استان">
+            `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return {
+                    address: document.getElementById('address').value,
+                    post_Code: document.getElementById('post_Code').value,
+                    province: document.getElementById('province').value
+                };
+            }
+        }).then(async (result) => {
+            if (result.value) {
+                try {
+                    await axiosInstance.post('https://midzi.liara.run/accounts/addresses/', result.value);
+                    toast.success('آدرس جدید با موفقیت اضافه شد!');
+                    fetchAddresses();
+                } catch (error) {
+                    console.error('Error adding address:', error);
+                    toast.error('خطا در افزودن آدرس.');
+                }
+            }
+        });
+    };
     const updateItemQuantity = async (item, quantity) => {
         try {
             const basketId = localStorage.getItem('basket');
             if (quantity >= 0) {
+                if (quantity > item.product_variant.stock) {
+                    quantity = item.product_variant.stock; // Set quantity to max stock
+                }
                 await axiosInstance.put(`/accounts/basket/${basketId}/items/`, {
                     product_variant_id: item.product_variant.id,
                     quantity,
@@ -48,14 +108,26 @@ const Page = () => {
     };
 
     const removeFromCart = async (item) => {
-        await updateItemQuantity(item, 0);
+        try {
+            const basketId = localStorage.getItem('basket');
+            await axiosInstance.put(`/accounts/basket/${basketId}/items/`, {
+                product_variant_id: item.product_variant.id,
+                quantity: 0,
+            });
+            toast.success('آیتم با موفقیت از سبد خرید حذف شد.');
+            fetchBasketItems(basketId);
+        } catch (error) {
+            console.error('خطا در حذف آیتم سبد خرید:', error);
+            toast.error('حذف آیتم از سبد خرید ناموفق بود.');
+        }
     };
 
     const calculateTotalPrice = (basketItems) => {
-        return basketItems.reduce((total, item) => {
+        const totalPrice = basketItems.reduce((total, item) => {
             const price = item.product_variant?.discounted_price || item.product_variant?.price || 0;
             return total + price * item.quantity;
         }, 0);
+        return totalPrice >= 2000000 ? totalPrice : totalPrice + 49000; // Free shipping for total price >= 2000000
     };
 
     const calculateTotalCount = (basketItems) => {
@@ -67,9 +139,12 @@ const Page = () => {
     const handleOrderSubmit = async () => {
         const basketId = localStorage.getItem('basket');
         const accessToken = localStorage.getItem('access');
+        const url = paymentMethod === 'reserve'
+            ? `https://midzi.liara.run/accounts/basket/${basketId}/request/`
+            : `https://midzi.liara.run/accounts/basket/${basketId}/normal/`;
         try {
             const response = await axiosInstance.get(
-                `https://midzi.liara.run/accounts/basket/${basketId}/request/`,
+                url,
                 {},
                 {
                     headers: {
@@ -88,7 +163,6 @@ const Page = () => {
             toast.error('خطا در ثبت سفارش.');
         }
     };
-
     return (
         <div className="p-4 bg-navblue w-full rounded-2xl font-sans_b dark:bg-navblueD dark:text-text_w">
             <div className="bg-navblue dark:bg-navblueD rounded-lg p-4">
@@ -155,18 +229,67 @@ const Page = () => {
                     <p className="text-center text-white">سبد خرید شما خالی است.</p>
                 )}
                 {basketItems.length > 0 && (
-                    <div className="mt-4">
-                        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <>
+                        <div className="mt-4 flex flex-col md:flex-row justify بین items-center gap-4">
                             <p className="text-lg font-semibold text-black dark:text-text_w">تعداد کل اقلام: {calculateTotalCount(basketItems)}</p>
-                            <p className="text-lg font-semibold text-black dark:text-text_w">جمع کل: {calculateTotalPrice(basketItems).toLocaleString()} تومان</p>
+                            <p className="text-lg font-semibold text-black dark:text-text_w">
+                                جمع کل: {calculateTotalPrice(basketItems).toLocaleString()} تومان
+                                {calculateTotalPrice(basketItems) >= 2000000 ? '(ارسال رایگان)' : '(به همراه هزینه پستی)'}
+                            </p>
                         </div>
-                        <button
-                            onClick={handleOrderSubmit}
-                            className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 mt-4 w-full md:w-auto"
-                        >
-                            ثبت سفارش و پرداخت
-                        </button>
-                    </div>
+                        <div className="mt-4">
+                            <h3 className="text-lg font-semibold mb-2 text-black dark:text-text_w">انتخاب آدرس:</h3>
+                            <ul className="space-y-2">
+                                {addresses.map(address => (
+                                    <li
+                                        key={address.id}
+                                        className={`p-2 border rounded-lg cursor-pointer ${selectedAddress === address.id ? 'border-green-500' : 'border-gray-300'} bg-white dark:bg-bgdark`}
+                                        onClick={() => setSelectedAddress(address.id)}
+                                    >
+                                        {address.province}، {address.address}،  {address.post_Code}
+                                    </li>
+                                ))}
+                            </ul>
+                            <button
+                                onClick={addAddress}
+                                className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-700"
+                            >
+                                افزودن آدرس جدید
+                            </button>
+                        </div>
+                        <div className="mt-4">
+                            <h3 className="text-lg font-semibold mb-2 text-black dark:text-text_w">انتخاب روش پرداخت:</h3>
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    onClick={() => setPaymentMethod('reserve')}
+                                    className={`py-2 px-4 rounded-lg shadow-md ${paymentMethod === 'reserve' ? 'border-2 border-green-500' : 'border'} bg-white dark:bg-bgdark`}
+                                >
+                                    رزرو
+                                </button>
+                                <p>رزرو شما به مدت 72 ساعت پس از خرید به سفارش تبدیل میشود و شما قاددر به اضافه کردن
+                                    ایتم بدون پرداخت هزینه پستی در این 72 ساعت خواهید بود </p>
+                                <button
+                                    onClick={() => setPaymentMethod('normal')}
+                                    className={`py-2 px-4 rounded-lg shadow-md ${paymentMethod === 'normal' ? 'border-2 border-green-500' : 'border'} bg-white dark:bg-bgdark  `}
+                                >
+                                    ارسال سریع پستی
+                                </button>
+                                <p> در سریع ترین زمان ممکن بسته شما ارسال خواهد شد  </p>
+                            </div>
+                        </div>
+                        <div className="mt-4">
+                            <button
+                                onClick={handleOrderSubmit}
+                                className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 mt-4 w-full md:w-auto"
+                                disabled={!selectedAddress}
+                            >
+                                ثبت سفارش و پرداخت
+                            </button>
+                            {!selectedAddress && (
+                                <p className="text-red-500 text-sm mt-2">لطفاً یک آدرس را انتخاب کنید</p>
+                            )}
+                        </div>
+                    </>
                 )}
             </div>
         </div>

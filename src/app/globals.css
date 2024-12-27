@@ -59,3 +59,14 @@ body {
   scrollbar-width: none;  /* Firefox */
 }
 
+.custom-input-range .input-range__slider {
+  width: 60px; /* Increase the width */
+  height: 60px; /* Increase the height */
+  background: #007bff; /* Change the color */
+  border-radius: 50%; /* Make it circular */
+  border: 2px solid #fff; /* Add a border */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a shadow */
+}
+
+
+
