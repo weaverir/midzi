@@ -45,7 +45,6 @@ const Search = () => {
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                toast.error('Error fetching data.');
 
                 setResults([]);
                 setDropdownVisible(true);
@@ -102,7 +101,7 @@ const Search = () => {
                     value={query}
                     name="name"
                     placeholder="دنبال چی میگردی ؟"
-                    className="flex flex-1 shadow rounded-full dark:bg-bgdark bg-white mx-4 placeholder:flex placeholder:justify-center placeholder:items-center"
+                    className="flex  shadow outline-none px-5 flex-1 rounded-full dark:bg-bgdark bg-white mx-4 placeholder:flex placeholder:justify-center placeholder:items-center"
                     onChange={handleInputChange}
                     autoComplete="off"
                 />
@@ -110,18 +109,7 @@ const Search = () => {
                     
                 </button>
             </form>
-            <div
-                className=" flex cursor-pointer lg:hidden"
-                onClick={() => router.push(`/`)}
-                style={{
-                    backgroundImage: darkMode ? "url('/logod.png')" : "url('/logo.png')",
-                    backgroundSize: 'contain',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                    height: '50px',
-                    width: '100px'
-                }}
-            />
+
             {loading && query ? (
                 <div
                     ref={dropdownRef}
@@ -173,8 +161,7 @@ const Search = () => {
             ) : dropdownVisible && results.length === 0 && query ? (
                 <div
                     className="w-[250px] dark:bg-navblueD dark:text-text_w absolute top-12 right-0 z-50 bg-navblue rounded-xl shadow-2xl p-2">
-                    No results found
-                </div>
+محصول یافت نشد                 </div>
             ) : null}
         </div>
     );

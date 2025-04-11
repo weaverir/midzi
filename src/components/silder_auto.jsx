@@ -2,6 +2,8 @@
 import React from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -12,8 +14,14 @@ import 'swiper/css/navigation';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 const Auto = () => {
+    const router = useRouter();
+
+    const handleClick = (category) => {
+        router.push(`/search?category=${category}`);
+    };
+
     return (
-        <div className="w-[100%]  mb-4 rounded-2xl">
+        <div className="w-[100%] mb-4 rounded-2xl">
             <Swiper
                 spaceBetween={30}
                 centeredSlides={true}
@@ -32,16 +40,26 @@ const Auto = () => {
                 className="mySwiper"
             >
                 <SwiperSlide>
-                    <div className="h-52 md:h-52 lg:h-64  xl:h-[350px] 2xl:h-96  bg-myblue mx-2 rounded-2xl"> slider 1 </div>
+                    <div
+                        className="relative pb-[50%] h-0 mx-2 rounded-2xl overflow-hidden cursor-pointer"
+                        onClick={() => handleClick(15)}
+                        style={{
+                            backgroundImage: "url('/s1.png')",
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                    />
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className="h-52 md:h-52 lg:h-64  xl:h-[350px] 2xl:h-96 bg-mygblue mx-2 rounded-2xl"> slider 2 </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <div className="h-52 md:h-52  lg:h-64 xl:h-[350px] 2xl:h-96 bg-mypurple mx-2 rounded-2xl"> slider 3 </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <div className="h-52 md:h-52  lg:h-64 xl:h-[350px] 2xl:h-96 bg-mygblue mx-2 rounded-2xl"> slider 4 </div>
+                    <div
+                        className="relative pb-[50%] h-0 mx-2 rounded-2xl overflow-hidden cursor-pointer"
+                        onClick={() => handleClick(14)}
+                        style={{
+                            backgroundImage: "url('/s2.png')",
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                    />
                 </SwiperSlide>
             </Swiper>
         </div>

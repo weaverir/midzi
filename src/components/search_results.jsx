@@ -95,16 +95,19 @@ const SearchResults = () => {
                                 </div>
                                 <div className="w-[215px] font-sans text-sm dark:text-text_w text-black dark:bg-bgdark flex-row h-[60px] bg-navblue mx-auto mb-4 rounded-xl flex items-center justify-between p-2 gap-3">
                                     <div className="flex flex-col justify-center items-center">
-                                        <div className="font-sans_b text-sm">{item.name}</div>
-                                        <div>{item.category_name}</div>
+                                        <div className="font-sans_b text-[14px] ">{item.name}</div>
+                                        <div
+                                            className={"text-sm flex text-[10px] text-gray-600 justify-start"}>{item.category_name}</div>
                                     </div>
                                     {item.discounted_price && item.discounted_price < item.price ? (
-                                        <div className={"text-sm flex flex-col"}>
-                                            <span className="text-red-600 font-bold">{item.discounted_price?.toLocaleString() || item.price.toLocaleString()} تومان</span>
-                                            <span className="line-through text-black dark:text-text_w ml-2">{item.price?.toLocaleString()} تومان</span>
+                                        <div className={" flex flex-col text-[12px]"}>
+                                            <span
+                                                className="text-red-600 font-bold">{item.discounted_price?.toLocaleString()} تومان</span>
+                                            <span
+                                                className="line-through text-black dark:text-text_w ml-2">{item.price?.toLocaleString()} تومان</span>
                                         </div>
                                     ) : (
-                                        <span className="text-black dark:text-text_w font-bold">{item.price?.toLocaleString()} تومان</span>
+                                        <div className="text-sm">{item.price?.toLocaleString()} تومان</div>
                                     )}
                                 </div>
                             </div>

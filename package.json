@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -p 7575",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -11,7 +11,17 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "axios": "^1.7.8",
+    "docx": "^9.1.1",
+    "file-saver": "^2.0.5",
+    "fs": "^0.0.1-security",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
+    "mammoth": "^1.9.0",
     "next": "15.0.3",
+    "pdf-lib": "^1.17.1",
+    "pdfmake": "^0.2.18",
+    "rc-slider": "^11.1.8",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-hot-toast": "^2.4.1",
@@ -20,7 +30,8 @@
     "react-transition-group": "^4.4.5",
     "sweetalert2": "^11.15.0",
     "swiper": "^11.1.15",
-    "tailwind-scrollbar": "^3.1.0"
+    "tailwind-scrollbar": "^3.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "eslint": "^8",

@@ -12,10 +12,11 @@ const Navbar = () => {
     const router = useRouter();
 
     return (
-        <div className='flex flex-col justify-center items-center'>
+        <div className="flex flex-col justify-center items-center">
             <div
                 id="navbar"
-                className={`mt-2 h-16 px-4 justify-between w-[100%] md:px-8 lg:px-16 flex max-w-[1440px] flex-row items-center top-0 z-50 bg-navblue dark:bg-navblueD dark:text-white rounded-3xl dark:border-gray-700 fixed md:relative md:top-0 md:rounded-3xl md:mt-2 bottom-navbar`}>
+                className={`h-16 px-4 justify-center w-[100%] md:justify-between md:px-8 lg:px-16 flex max-w-[1440px] flex-row items-center z-50 bg-navblue dark:bg-navblueD dark:text-white rounded-3xl dark:border-gray-700 fixed bottom-0 md:relative md:mt-2 md:rounded-3xl`}
+            >
                 <div className="flex flex-row items-center justify-between">
                     <Menu />
                     <div
@@ -35,7 +36,8 @@ const Navbar = () => {
                     <div
                         id="dark"
                         className="rounded-full w-10 h-10 font-awsome bg-myblue justify-center items-center text-text_w shadow-lg cursor-pointer mx-1 hidden lg:flex"
-                        onClick={toggleDarkMode}>
+                        onClick={toggleDarkMode}
+                    >
                         {darkMode ? '' : ''}
                     </div>
                     <Search />
@@ -44,8 +46,19 @@ const Navbar = () => {
                     <NaviCons />
                 </div>
             </div>
-            <div className="h-20 md:h-0"></div> {/* Adjusted Spacer for mobile and tablet sizes */}
             <BotNav />
+            <div
+                className="flex cursor-pointer lg:hidden"
+                onClick={() => router.push(`/`)}
+                style={{
+                    backgroundImage: darkMode ? "url('/logod.png')" : "url('/logo.png')",
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    height: '100px',
+                    width: '150px'
+                }}
+            />
         </div>
     );
 };

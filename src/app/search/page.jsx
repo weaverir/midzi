@@ -1,8 +1,13 @@
-"use client"
-import React, {useEffect, useState} from 'react';
+
+import React from 'react';
 import FilterSearch from "@/components/filters";
 import SearchResults from "@/components/search_results";
-import axios from "axios";
+export const generateMetadata = async () => {
+    return {
+        title: 'فروشگاه میدزی | جست و جو',
+        description: 'جست و جو کردن محصولات',
+    };
+};
 
 function Page(props) {
 

@@ -67,6 +67,54 @@ body {
   border: 2px solid #fff; /* Add a border */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a shadow */
 }
+/* styles.css or any appropriate CSS file */
+/* styles.css or any appropriate CSS file */
+@media only screen and (max-width: 768px) {
+  #navbar {
+    bottom: 0;
+    top: auto;
+    position: fixed;
+    margin-bottom: 10px; /* Add bottom padding */
+  }
+}
+/* styles.css or any appropriate CSS file */
+.cart-modal-mobile {
+  z-index: 60;
+}
+
+@media only screen and (max-width: 768px) {
+  .cart-modal-mobile {
+    top: auto;
+    bottom: 70px; /* Adjust this value as needed to ensure the modal is above the navbar */
+  }
+}
+/* styles.css or any appropriate CSS file */
+.cart-modal-mobile,
+.profile-modal-mobile {
+  z-index: 60;
+}
+
+@media only screen and (max-width: 768px) {
+  .cart-modal-mobile,
+  .profile-modal-mobile {
+    top: auto;
+    bottom: 70px; /* Adjust this value as needed to ensure the modal is above the navbar */
+  }
+}
+/* styles.css or any appropriate CSS file */
+.search-modal-mobile {
+  z-index: 60;
+}
+
+@media only screen and (max-width: 768px) {
+  .search-modal-mobile {
+    top: auto;
+    bottom: 70px; /* Adjust this value as needed to ensure the modal is above the navbar */
+  }
+}
+
+
+
 
 
 

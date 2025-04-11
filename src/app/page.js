@@ -44,7 +44,7 @@ export default function Home() {
     return (
         <>
 
-            <div className="max-w-[1440px] w-full 2xl:mx-auto mt-10">
+            <div className="max-w-[1440px] w-full 2xl:mx-auto ">
                 {/* Main Content Section */}
                 <div className="flex flex-col-reverse 2xl:flex-row xl:flex-row mt-16">
                     <Auto />

@@ -84,6 +84,7 @@ const Menu = () => {
 
         return () => clearTimeout(delayDebounceFn);
     }, [query]);
+
     const handleInputChange = (event) => {
         const query = event.target.value;
         setQuery(query);
@@ -136,32 +137,32 @@ const Menu = () => {
     };
 
     return (
-        <>
+        <div className={"flex justify-between gap-1 items-center"}>
+
             <Category/>
 
             <div id="dark"
-                 className="rounded-full w-10 h-10 select-none font-awsome bg-myblue justify-center items-center text-text_w shadow-lg cursor-pointer mx-1 flex lg:hidden"
+                 className="rounded-full  w-14  md:w-10   h-10 select-none font-awsome bg-myblue justify-center items-center text-text_w shadow-lg cursor-pointer  flex lg:hidden"
                  onClick={toggleDarkMode}>
                 {darkMode ? '' : ''}
             </div>
             <div
-                className="font-awsome cursor-pointer select-none lg:hidden text-xl bg-myblue rounded-full w-[40px] h-[40px] flex items-center justify-center text-text_w"
+                className="font-awsome cursor-pointer select-none lg:hidden text-xl bg-myblue rounded-full w-14  md:w-10 h-[40px] flex items-center justify-center mx-1 text-text_w"
                 onClick={() => setSearchIsOpen((prev) => !prev)}>
                 
             </div>
             {searchIsOpen && (
                 <div ref={searchPopupRef}
-                     className="absolute z-50 left-0 dark:bg-navblueD dark:text-text_w top-16 h-[calc(100vh-100px)] bg-navblue w-full mt-4 text-text_b flex flex-col items-center justify-start gap-8">
-
+                     className="absolute z-50 left-0 dark:bg-navblueD dark:text-text_w top-16 h-[calc(100vh-100px)] bg-navblue w-full mt-4 text-text_b flex flex-col items-center justify-start gap-8 search-modal-mobile">
                     <div className="flex-row gap-2 mt-4 flex z-50">
                         <button
-                            className="font-awsome text-xl text-text_w bg-red-500 rounded-full w-[40px] h-[40px] flex items-center justify-center"
+                            className="font-awsome text-xl text-text_w bg-red-500 rounded-full w-[40px] h-[40px] mt-12  flex items-center justify-center"
                             onClick={() => setSearchIsOpen(false)}>
                             
                         </button>
-                        <form onSubmit={handleSearch} className='flex flex-row rounded'>
+                        <form onSubmit={handleSearch} className='flex flex-row rounded mt-12'>
                             <input type="text" name="name" value={query} placeholder='دنبال چی میگردی ؟'
-                                   className='flex font-sans_b  dark:bg-bgdark flex-1 dark:text-text_w shadow rounded-full bg-white mx-4 placeholder:flex placeholder:justify-center placeholder:items-center'
+                                   className='flex font-sans_b w-[80%] outline-none px-4  dark:bg-bgdark flex-1 dark:text-text_w shadow rounded-full bg-white mx-4 placeholder:flex placeholder:justify-center placeholder:items-center'
                                    onChange={handleInputChange} autoComplete="off"/>
                             <button type="submit"
                                     className='font-awsome bg-myblue text-text_w rounded-full w-[40px] h-[40px]'>
@@ -171,7 +172,7 @@ const Menu = () => {
 
                     {loading && query ? (
                         <div
-                            className="w-[350px] dark:bg-navblueD dark:text-text_w absolute top-28 h-[500px] z-50 bg-navblue rounded-xl shadow-2xl p-2 flex justify-center items-center">
+                            className="w-[350px] dark:bg-navblueD dark:text-text_w absolute border-2 border-gray-200 top-28 h-[500px] z-50 bg-navblue rounded-xl shadow-2xl p-2 flex justify-center items-center">
                             <BounceLoader color="#505DB1"/>
                         </div>
                     ) : dropdownVisible && results.length > 0 && query ? (
@@ -217,7 +218,7 @@ const Menu = () => {
                     ) : null}
                 </div>
             )}
-        </>
+        </div>
     );
 };
 

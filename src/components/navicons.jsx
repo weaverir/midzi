@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import CartModal from "@/components/cartmodal";
-import { CartContext  } from '@/lib/cartAuth';
+import { CartContext } from '@/lib/cartAuth';
 import { AuthContext } from '@/lib/loginauth';
 
 const NaviCons = () => {
@@ -48,10 +48,10 @@ const NaviCons = () => {
         setIsProfileOpen(false);
     };
 
-    const handleProfile1 =()=>{
-        router.push('/user')
+    const handleProfile1 = () => {
+        router.push('/user');
         setIsProfileOpen(false);
-    }
+    };
 
     const handleProfile = () => {
         if (!isAuthenticated) {
@@ -62,11 +62,11 @@ const NaviCons = () => {
     };
 
     return (
-        <div id="cart_user" className="flex flex-row items-center justify-between mx-1 relative">
+        <div id="cart_user" className="flex flex-row items-center gap-2 justify-between mx-2 relative">
             <div
                 id="cart"
                 ref={cartRef}
-                className="flex rounded-full w-8 h-8 font-awsome bg-myblue justify-center items-center text-text_w shadow-lg cursor-pointer mx-1 text-sm"
+                className="flex rounded-full w-14   h-10  md:w-8 md:h-8 font-awsome bg-myblue justify-center items-center text-text_w shadow-lg cursor-pointer mx-1 text-sm"
                 onClick={() => setIsCartOpen(!isCartOpen)}
             >
                 🛒
@@ -81,12 +81,11 @@ const NaviCons = () => {
             <div
                 id='login'
                 ref={profileRef}
-                className="rounded-full w-10 h-10 font-awsome bg-mypurple flex justify-center items-center text-text_w shadow-lg mx-1"
+                className="rounded-full w-14 md:w-10 h-10 font-awsome bg-mypurple flex justify-center items-center text-text_w shadow-lg mx-1"
             >
                 <div className="font-awsome cursor-pointer" onClick={handleProfile}></div>
                 {isProfileOpen && (
-                    <div
-                        className="absolute dark:bg-navblueD dark:text-text_w font-sans_b p-4 top-12 z-50 left-0 bg-navblue rounded-xl text-text_b">
+                    <div className="absolute dark:bg-navblueD dark:text-text_w font-sans_b p-4 top-12 z-50 left-0 bg-navblue rounded-xl text-text_b profile-modal-mobile">
                         <p>{name}</p>
                         <div className="mt-2 cursor-pointer" onClick={handleProfile1}>پروفایل</div>
                         <div className="mt-2 cursor-pointer" onClick={handleLogout}>خروج</div>

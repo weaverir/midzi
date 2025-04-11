@@ -101,7 +101,7 @@ const CartModal = () => {
     const CartItem = cart.length > 0;
 
     return (
-        <div ref={modalRef} className="cart-modal w-max absolute font-sans_b p-2 top-12 z-50 left-0 bg-navblue  dark:bg-navblueD dark:text-text_w rounded-xl text-text_b flex flex-col gap-6 shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-w-[350px] md:w-max md:max-h-[500px]">
+        <div ref={modalRef} className="cart-modal w-max absolute font-sans_b p-2 top-12 z-50 left-0 bg-navblue  dark:bg-navblueD dark:text-text_w rounded-xl text-text_b flex flex-col gap-6 shadow-[0_3px_10px_rgb(0,0,0,0.2)] max-w-[350px] md:w-max md:max-h-[500px] cart-modal-mobile">
             {!CartItem ? (
                 <div className="flex justify-center dark:bg-navblueD dark:text-text_w items-center">سبد خرید خالی است</div>
             ) : (
@@ -149,7 +149,6 @@ const CartModal = () => {
                             <span className="bg-myblue dark:bg-bgdark dark:text-text_w p-1 rounded-lg text-text_w">{calculateTotalPrice(cart).toLocaleString()} تومان</span>
                         </div>
                         <div className="flex justify-between text-sm mt-4">
-
                             <button className="bg-myblue rounded-lg p-1 text-text_w" onClick={() => router.push('/user/cart')}>تکمیل سفارش</button>
                         </div>
                     </div>
